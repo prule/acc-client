@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="AccSimulator" type="JetRunConfigurationType">
+    <option name="MAIN_CLASS_NAME" value="io.github.prule.acc.client.simulator.AccSimulatorKt" />
+    <module name="acc-client.main" />
+    <shortenClasspath name="NONE" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
