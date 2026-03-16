@@ -48,7 +48,10 @@ class MessageSender(
     val socket: DatagramSocket,
     val socketAddress: SocketAddress,
 ) {
+    private val logger = LoggerFactory.getLogger(javaClass)
+
     fun send(bytes: ByteArray) {
+        logger.debug("Sending bytes: ${bytes.toHexString()}")
         val responsePacket = DatagramPacket(bytes, bytes.size, socketAddress)
         socket.send(responsePacket)
     }

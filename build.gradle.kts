@@ -31,3 +31,15 @@ kotlin {
 tasks.test {
     useJUnitPlatform()
 }
+
+tasks.register<JavaExec>("runAccSimulator") {
+    group = "application"
+    mainClass.set("io.github.prule.acc.client.simulator.AccSimulatorKt")
+    classpath = sourceSets["main"].runtimeClasspath
+}
+
+tasks.register<JavaExec>("runAccClient") {
+    group = "application"
+    mainClass.set("io.github.prule.acc.client.AccClientKt")
+    classpath = sourceSets["main"].runtimeClasspath
+}

@@ -11,7 +11,9 @@ fun main() {
     AccClient(
         AccClientConfiguration(
             "Test",
-            serverIp = "192.168.86.116",
+            port = 9996,
+            serverIp = "127.0.0.1",
+//            serverIp = "192.168.86.116",
         ),
     ).connect(
         listOf(

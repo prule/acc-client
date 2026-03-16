@@ -1,5 +1,6 @@
 package io.github.prule.acc.client.simulator
 
+import io.github.prule.acc.client.LoggingListener
 import io.github.prule.acc.client.MessageReceiver
 import io.github.prule.acc.messages.AccBroadcastingOutbound
 import org.slf4j.LoggerFactory
@@ -28,6 +29,7 @@ class AccSimulator(
         MessageReceiver(
             socket,
             listOf(
+                LoggingListener(),
                 RegisterListener(socket, EventPlayer(configuration.playbackEventsFile)),
             ),
         ) { buffer -> AccBroadcastingOutbound(buffer) }
