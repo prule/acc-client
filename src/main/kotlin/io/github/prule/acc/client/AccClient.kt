@@ -11,10 +11,7 @@ fun main() {
     AccClient(
         AccClientConfiguration(
             "Test",
-//            serverIp = "192.168.86.109",
-            recordDirectory =
-                java.nio.file.Path
-                    .of("./recordings"),
+            serverIp = "192.168.86.116",
         ),
     ).connect(
         listOf(
