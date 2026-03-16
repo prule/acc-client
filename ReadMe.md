@@ -2,6 +2,8 @@
 
 A Kotlin client for Assetto Corsa Competizione (ACC) Dedicated Server UDP communication.
 
+> This library depends on https://github.com/prule/acc-messages
+
 ## Features
 
 - **Connect to ACC Server**: Communicates with the ACC server via the UDP protocol.
@@ -24,6 +26,8 @@ Run AccSimulator
 > Task :io.github.prule.acc.client.simulator.AccSimulatorKt.main()
 22:01:14.834 [main] DEBUG io.github.prule.acc.client.simulator.AccSimulator -- Starting simulator
 ```
+
+----
 
 Run AccClient
 
@@ -52,6 +56,13 @@ The client will register with the simulator and then start receiving packets as 
 22:23:42.736 [main] DEBUG i.g.prule.acc.client.MessageReceiver -- Socket timed out. Session ended.
 ```
 
+Messages received are written to a file as mentioned in the output:
+
+```text
+Writing simulator-recording-2026-03-16T22-23-37.857031.csv
+```
+
+----
 You'll see the simulator send and receive packets:
 
 ```text
