@@ -14,7 +14,7 @@ repositories {
 }
 
 dependencies {
-    api("io.github.prule.acc.messages:acc-messages:1.0-SNAPSHOT")
+    api("com.github.prule:acc-client:main-SNAPSHOT")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
     implementation("ch.qos.logback:logback-classic:1.5.32")
     implementation("com.github.doyaaaaaken:kotlin-csv-jvm:0.15.2")

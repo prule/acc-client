@@ -9,7 +9,7 @@ A Kotlin client for Assetto Corsa Competizione (ACC) Dedicated Server UDP commun
 > Configuring ACC:
 > In `C:\Users\<username>\Documents\Assetto Corsa Competizione\Config\broadcasting.json` you can find the broadcasting configuration - you'll need the port and connection password from here:
 > ```json
-> {                                                                                                                         
+> {                  
 >   "updListenerPort": 9000,
 >   "connectionPassword": "asd",
 >   "commandPassword": ""
