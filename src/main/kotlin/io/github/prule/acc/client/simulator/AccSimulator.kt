@@ -6,11 +6,27 @@ import io.github.prule.acc.messages.AccBroadcastingOutbound
 import org.slf4j.LoggerFactory
 import java.net.DatagramSocket
 import java.net.InetAddress
-import java.nio.file.Path
 
+/**
+ * Start the simulator with a pre-recorded session (playback-events.csv).
+ *
+ * Events can be read from the classpath or a local file.
+ * ```kotlin
+ *   playbackEventsFile = ClasspathSource("io/github/prule/acc/client/simulator/playback-events.csv"),
+ *
+ *   OR
+ *
+ *   playbackEventsFile = FileSource("./playback-events.csv"),
+ * ```
+ */
 fun main() {
-    val configuration = AccSimulatorConfiguration(9996, "asd", Path.of("./playback-events.csv"))
-    AccSimulator(configuration).start()
+    AccSimulator(
+        AccSimulatorConfiguration(
+            port = 9000,
+            connectionPassword = "asd",
+            playbackEventsFile = ClasspathSource("io/github/prule/acc/client/simulator/playback-events.csv"),
+        ),
+    ).start()
 }
 
 /**

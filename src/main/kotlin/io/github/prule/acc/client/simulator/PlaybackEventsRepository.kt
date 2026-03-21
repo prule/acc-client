@@ -6,16 +6,16 @@ import io.blackmo18.kotlin.grass.date.time.Java8DateTime
 import io.blackmo18.kotlin.grass.dsl.grass
 import io.github.prule.acc.client.EventRow
 import org.slf4j.LoggerFactory
-import java.io.File
 
 class PlaybackEventsRepository {
     private val logger = LoggerFactory.getLogger(javaClass)
 
     @OptIn(ExperimentalStdlibApi::class)
-    fun load(file: File): List<EventRow> {
-        logger.info("Loading ${file.absolutePath}")
-        val csvContents = csvReader().readAllWithHeader(file)
-        return grass<EventRow>().harvest(csvContents)
+    fun load(file: Source): List<EventRow> {
+        file.inputStream().use { reader ->
+            val csvContents = csvReader().readAllWithHeader(reader)
+            return grass<EventRow>().harvest(csvContents)
+        }
     }
 }
 

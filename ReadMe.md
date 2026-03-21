@@ -43,9 +43,21 @@ AccClient(
 )
 ```
 
+The simulator can be started programmatically using
+
+```kotlin
+    AccSimulator(
+    AccSimulatorConfiguration(
+        port = 9000,
+        connectionPassword = "asd",
+        playbackEventsFile = ClasspathSource("./playback-events.csv"),
+    ),
+).start()
+```
+
 ## Demonstration
 
-Run AccSimulator
+Run AccSimulator which pretends to be ACC and sends pre-recorded UDP packets to the client.
 
 ```shell
 ./gradlew runAccSimulator

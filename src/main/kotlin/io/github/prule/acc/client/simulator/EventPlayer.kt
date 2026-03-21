@@ -5,10 +5,9 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.slf4j.LoggerFactory
-import java.nio.file.Path
 
 class EventPlayer(
-    val eventsFile: Path,
+    val eventsFile: Source,
 ) {
     private val playbackEventsRepository = PlaybackEventsRepository()
     private val logger = LoggerFactory.getLogger(javaClass)
@@ -16,7 +15,7 @@ class EventPlayer(
     @OptIn(DelicateCoroutinesApi::class)
     fun sendPackets(messageSender: MessageSender) {
         GlobalScope.launch {
-            val events = playbackEventsRepository.load(eventsFile.toFile())
+            val events = playbackEventsRepository.load(eventsFile)
             events.forEach {
                 // todo incorporate proper time delay
                 messageSender.send(it.hex.hexToByteArray())
