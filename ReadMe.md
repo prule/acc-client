@@ -1,5 +1,7 @@
 # Assetto Corsa Competizione (ACC) Client
 
+[![](https://jitpack.io/v/prule/acc-client.svg)](https://jitpack.io/#prule/acc-client)
+
 A Kotlin client for Assetto Corsa Competizione (ACC) Dedicated Server UDP communication.
 
 > This library depends on https://github.com/prule/acc-messages
