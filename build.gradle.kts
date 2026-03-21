@@ -13,15 +13,15 @@ repositories {
 }
 
 dependencies {
-    api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
     api("io.github.prule.acc.messages:acc-messages:1.0-SNAPSHOT")
-    api("ch.qos.logback:logback-classic:1.5.32")
-    api("com.github.doyaaaaaken:kotlin-csv-jvm:0.15.2")
-    api("io.github.blackmo18:kotlin-grass-core-jvm:1.0.0")
-    api("io.github.blackmo18:kotlin-grass-parser-jvm:0.8.0")
-    api("io.github.blackmo18:kotlin-grass-date-time-jvm:0.8.0")
-    api("com.fasterxml.jackson.core:jackson-databind:2.21.1")
-    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+    implementation("ch.qos.logback:logback-classic:1.5.32")
+    implementation("com.github.doyaaaaaken:kotlin-csv-jvm:0.15.2")
+    implementation("io.github.blackmo18:kotlin-grass-core-jvm:1.0.0")
+    implementation("io.github.blackmo18:kotlin-grass-parser-jvm:0.8.0")
+    implementation("io.github.blackmo18:kotlin-grass-date-time-jvm:0.8.0")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.21.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
     testImplementation(kotlin("test"))
 }
 
