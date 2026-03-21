@@ -4,7 +4,7 @@ import io.github.prule.acc.messages.AccBroadcastingInbound
 import org.slf4j.LoggerFactory
 import kotlin.reflect.KClass
 
-class FilteredMessageListener<T : AccBroadcastingInbound>(
+class FilteredMessageListener<T : Any>(
     private val clazz: KClass<T>,
     val filter: (T) -> Boolean = { true },
     val block: (T) -> Unit,
@@ -27,7 +27,7 @@ class FilteredMessageListener<T : AccBroadcastingInbound>(
     }
 
     companion object {
-        inline operator fun <reified T : AccBroadcastingInbound> invoke(
+        inline operator fun <reified T : Any> invoke(
             noinline filter: (T) -> Boolean = { true },
             noinline block: (T) -> Unit,
         ): FilteredMessageListener<T> = FilteredMessageListener(T::class, filter, block)
