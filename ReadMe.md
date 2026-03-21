@@ -14,6 +14,24 @@ A Kotlin client for Assetto Corsa Competizione (ACC) Dedicated Server UDP commun
   debugging).
 - **Car & Track Models**: Includes repositories to handle ACC car models and track data.
 
+## Example use
+
+```kotlin
+AccClient(
+    AccClientConfiguration(
+        "Test",
+        port = 9000,
+        serverIp = "127.0.0.1",
+    )
+).connect(
+    listOf(
+        LoggingListener(),
+        CsvWriterListener(java.nio.file.Path.of("./recordings")),
+        RegistrationResultListener()
+    )
+)
+```
+
 ## Demonstration
 
 Run AccSimulator

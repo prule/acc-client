@@ -1,6 +1,7 @@
 plugins {
     kotlin("jvm") version "2.3.10"
     kotlin("plugin.serialization") version "2.3.10"
+    id("maven-publish")
 }
 
 group = "io.github.prule.acc.client"
@@ -12,8 +13,8 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3") // Check GitHub for the latest version
-    implementation("io.github.prule.acc.messages:acc-messages:1.0-SNAPSHOT")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+    api("io.github.prule.acc.messages:acc-messages:1.0-SNAPSHOT")
     implementation("ch.qos.logback:logback-classic:1.5.32")
     implementation("com.github.doyaaaaaken:kotlin-csv-jvm:0.15.2")
     implementation("io.github.blackmo18:kotlin-grass-core-jvm:1.0.0")
@@ -42,4 +43,15 @@ tasks.register<JavaExec>("runAccClient") {
     group = "application"
     mainClass.set("io.github.prule.acc.client.AccClientKt")
     classpath = sourceSets["main"].runtimeClasspath
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            from(components["java"])
+        }
+    }
+    repositories {
+        mavenLocal()
+    }
 }

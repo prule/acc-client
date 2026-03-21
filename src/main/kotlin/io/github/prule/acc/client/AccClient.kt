@@ -2,12 +2,16 @@ package io.github.prule.acc.client
 
 import io.github.prule.acc.messages.AccBroadcastingClient
 import io.github.prule.acc.messages.AccBroadcastingInbound
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.slf4j.LoggerFactory
 import java.net.DatagramPacket
 import java.net.DatagramSocket
 import java.net.InetAddress
 
-fun main() {
+suspend fun main() {
     AccClient(
         AccClientConfiguration(
             "Test",
@@ -33,12 +37,14 @@ class AccClient(
     private val logger = LoggerFactory.getLogger(javaClass)
     private val client = AccBroadcastingClient()
     private var connectionId: Int = 0
+    private var running = false
 
     /**
      * Attempts to connect to the server over UDP using the given connection
      */
-    fun connect(listeners: List<MessageListener<AccBroadcastingInbound>>) {
+    suspend fun connect(listeners: List<MessageListener<AccBroadcastingInbound>>) {
         logger.debug("Connecting to server")
+        running = true
 
         val registerCommand =
             client.buildRegisterCommandApplication(
@@ -48,17 +54,30 @@ class AccClient(
                 configuration.connectionPassword,
             )
 
-        DatagramSocket().use { socket ->
-            socket.soTimeout = 2000
+        withContext(Dispatchers.IO) {
+            DatagramSocket().use { socket ->
+                socket.soTimeout = 2000
 
-            send(socket, registerCommand)
-            logger.debug("Sent register command, listening for data")
+                launch {
+                    MessageReceiver(
+                        socket,
+                        listeners,
+                    ) { buffer -> AccBroadcastingInbound(buffer) }.start()
+                }
 
-            MessageReceiver(
-                socket,
-                listeners,
-            ) { buffer -> AccBroadcastingInbound(buffer) }.start()
+                delay(1000)
+                send(socket, registerCommand)
+                logger.debug("Sent register command, listening for data")
+
+                while (running) {
+                    delay(1000)
+                }
+            }
         }
+    }
+
+    fun stop() {
+        running = false
     }
 
     fun send(
