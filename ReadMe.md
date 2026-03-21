@@ -27,6 +27,14 @@ A Kotlin client for Assetto Corsa Competizione (ACC) Dedicated Server UDP commun
 
 ## Example use
 
+Install the jar locally so other projects can use it:
+
+```shell
+./gradlew clean publishToMavenLocal
+```
+
+Configure listeners and connect:
+
 ```kotlin
 AccClient(
     AccClientConfiguration(
