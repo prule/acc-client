@@ -7,12 +7,6 @@ plugins {
 group = "io.github.prule.acc.client"
 version = "1.0-SNAPSHOT"
 
-repositories {
-    mavenLocal()
-    mavenCentral()
-    maven { url = uri("https://jitpack.io") }
-}
-
 dependencies {
     api("com.github.prule:acc-messages:main-SNAPSHOT")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
