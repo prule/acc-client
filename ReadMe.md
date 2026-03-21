@@ -4,6 +4,17 @@ A Kotlin client for Assetto Corsa Competizione (ACC) Dedicated Server UDP commun
 
 > This library depends on https://github.com/prule/acc-messages
 
+> Configuring ACC:
+> In `C:\Users\paulr\Documents\Assetto Corsa Competizione\Config\broadcasting.json` you can find the broadcasting configuration - you'll need the port and connection password from here:
+> ```json
+> {                                                                                                                         
+>   "updListenerPort": 9000,
+>   "connectionPassword": "asd",
+>   "commandPassword": ""
+> }
+> ```
+> For information on ACC broadcasting and the ACC Broadcasting Test Client see https://github.com/prule/acc-messages/blob/main/docs/AccBroadcastingExample/ReadMe.md
+
 ## Features
 
 - **Connect to ACC Server**: Communicates with the ACC server via the UDP protocol.
