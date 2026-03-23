@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "io.github.prule.acc.client"
-version = "1.0-SNAPSHOT"
+version = "main-SNAPSHOT"
 
 dependencies {
     api("com.github.prule:acc-messages:main-SNAPSHOT")
