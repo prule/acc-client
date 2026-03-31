@@ -4,7 +4,7 @@ plugins {
     id("maven-publish")
 }
 
-group = "io.github.prule"
+group = "com.github.prule"
 version = "main-SNAPSHOT"
 
 dependencies {
