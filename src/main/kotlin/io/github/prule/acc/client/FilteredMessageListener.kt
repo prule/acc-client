@@ -7,7 +7,7 @@ import kotlin.reflect.KClass
 class FilteredMessageListener<T : Any>(
     private val clazz: KClass<T>,
     val filter: (T) -> Boolean = { true },
-    val block: (T) -> Unit,
+    val listeners: List<MessageListener<T>>,
 ) : MessageListener<AccBroadcastingInbound> {
     private val logger = LoggerFactory.getLogger(javaClass)
 
@@ -20,7 +20,7 @@ class FilteredMessageListener<T : Any>(
         @Suppress("UNCHECKED_CAST")
         if (clazz.isInstance(body) && filter(body as T)) {
             logger.debug("Matched message")
-            block(body as T)
+            listeners.forEach { listener -> listener.onMessage(bytes, message as T, messageSender) }
         } else {
             logger.debug("Unmatched message")
         }
@@ -29,7 +29,7 @@ class FilteredMessageListener<T : Any>(
     companion object {
         inline operator fun <reified T : Any> invoke(
             noinline filter: (T) -> Boolean = { true },
-            noinline block: (T) -> Unit,
-        ): FilteredMessageListener<T> = FilteredMessageListener(T::class, filter, block)
+            listeners: List<MessageListener<T>>,
+        ): FilteredMessageListener<T> = FilteredMessageListener(T::class, filter, listeners)
     }
 }

@@ -10,7 +10,11 @@ import org.slf4j.LoggerFactory
 import java.net.DatagramPacket
 import java.net.DatagramSocket
 import java.net.InetAddress
+import kotlin.time.Duration.Companion.milliseconds
 
+/**
+ * An example showing how the client might be used.
+ */
 suspend fun main() {
     AccClient(
         AccClientConfiguration(
@@ -65,12 +69,12 @@ class AccClient(
                     ) { buffer -> AccBroadcastingInbound(buffer) }.start()
                 }
 
-                delay(1000)
+                delay(1000.milliseconds)
                 send(socket, registerCommand)
                 logger.debug("Sent register command, listening for data")
 
                 while (running) {
-                    delay(1000)
+                    delay(1000.milliseconds)
                 }
             }
         }

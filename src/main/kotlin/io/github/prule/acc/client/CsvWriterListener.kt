@@ -10,7 +10,7 @@ import java.time.LocalDateTime
 
 @OptIn(KotlinCsvExperimental::class)
 class CsvWriterListener<T>(
-    private val directory: Path?,
+    directory: Path?,
 ) : MessageListener<T> {
     private val logger = LoggerFactory.getLogger(javaClass)
     private lateinit var writer: CsvFileWriter
