@@ -1,6 +1,6 @@
-package io.github.prule.acc.client.simulator
+package com.github.prule.acc.client.simulator
 
-import io.github.prule.acc.client.MessageSender
+import com.github.prule.acc.client.MessageSender
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

@@ -1,4 +1,4 @@
-package io.github.prule.acc.client
+package com.github.prule.acc.client
 
 interface MessageListener<T> {
     fun onStart() {

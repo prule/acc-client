@@ -1,4 +1,4 @@
-package io.github.prule.acc.client.simulator
+package com.github.prule.acc.client.simulator
 
 import kotlinx.serialization.Serializable
 

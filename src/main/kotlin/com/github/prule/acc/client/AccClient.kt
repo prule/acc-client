@@ -1,7 +1,7 @@
-package io.github.prule.acc.client
+package com.github.prule.acc.client
 
-import io.github.prule.acc.messages.AccBroadcastingClient
-import io.github.prule.acc.messages.AccBroadcastingInbound
+import com.github.prule.acc.messages.AccBroadcastingClient
+import com.github.prule.acc.messages.AccBroadcastingInbound
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -16,6 +16,7 @@ import kotlin.time.Duration.Companion.milliseconds
  * An example showing how the client might be used.
  */
 suspend fun main() {
+    val clientState = _root_ide_package_.com.github.prule.acc.client.ClientState()
     AccClient(
         AccClientConfiguration(
             "Test",
@@ -30,7 +31,7 @@ suspend fun main() {
                 java.nio.file.Path
                     .of("./recordings"),
             ),
-            RegistrationResultListener(),
+            RegistrationResultListener(clientState),
         ),
     )
 }

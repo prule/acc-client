@@ -1,4 +1,4 @@
-package io.github.prule.acc.client
+package com.github.prule.acc.client
 
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import io.blackmo18.kotlin.grass.dsl.grass

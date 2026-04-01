@@ -1,4 +1,4 @@
-package io.github.prule.acc.client
+package com.github.prule.acc.client
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect
 import com.fasterxml.jackson.annotation.JsonFilter

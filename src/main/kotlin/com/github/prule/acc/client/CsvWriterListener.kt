@@ -1,4 +1,4 @@
-package io.github.prule.acc.client
+package com.github.prule.acc.client
 
 import com.github.doyaaaaaken.kotlincsv.client.CsvFileWriter
 import com.github.doyaaaaaken.kotlincsv.client.KotlinCsvExperimental

@@ -1,8 +1,8 @@
-package io.github.prule.acc.client.simulator
+package com.github.prule.acc.client.simulator
 
-import io.github.prule.acc.client.LoggingListener
-import io.github.prule.acc.client.MessageReceiver
-import io.github.prule.acc.messages.AccBroadcastingOutbound
+import com.github.prule.acc.client.LoggingListener
+import com.github.prule.acc.client.MessageReceiver
+import com.github.prule.acc.messages.AccBroadcastingOutbound
 import org.slf4j.LoggerFactory
 import java.net.DatagramSocket
 import java.net.InetAddress

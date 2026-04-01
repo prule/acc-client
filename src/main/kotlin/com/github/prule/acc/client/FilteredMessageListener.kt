@@ -1,6 +1,6 @@
-package io.github.prule.acc.client
+package com.github.prule.acc.client
 
-import io.github.prule.acc.messages.AccBroadcastingInbound
+import com.github.prule.acc.messages.AccBroadcastingInbound
 import org.slf4j.LoggerFactory
 import kotlin.reflect.KClass
 

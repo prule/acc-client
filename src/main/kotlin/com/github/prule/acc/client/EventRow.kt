@@ -1,4 +1,4 @@
-package io.github.prule.acc.client
+package com.github.prule.acc.client
 
 data class EventRow(
     val date: String,

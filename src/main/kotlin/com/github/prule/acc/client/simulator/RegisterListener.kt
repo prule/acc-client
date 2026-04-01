@@ -1,8 +1,8 @@
-package io.github.prule.acc.client.simulator
+package com.github.prule.acc.client.simulator
 
-import io.github.prule.acc.client.MessageListener
-import io.github.prule.acc.client.MessageSender
-import io.github.prule.acc.messages.AccBroadcastingOutbound
+import com.github.prule.acc.client.MessageListener
+import com.github.prule.acc.client.MessageSender
+import com.github.prule.acc.messages.AccBroadcastingOutbound
 import java.net.DatagramSocket
 
 class RegisterListener(

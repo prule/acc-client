@@ -1,10 +1,10 @@
-package io.github.prule.acc.client.simulator
+package com.github.prule.acc.client.simulator
 
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
+import com.github.prule.acc.client.EventRow
 import io.blackmo18.kotlin.grass.core.DateTimeTypes
 import io.blackmo18.kotlin.grass.date.time.Java8DateTime
 import io.blackmo18.kotlin.grass.dsl.grass
-import io.github.prule.acc.client.EventRow
 import org.slf4j.LoggerFactory
 
 class PlaybackEventsRepository {

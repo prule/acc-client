@@ -1,4 +1,4 @@
-package io.github.prule.acc.client
+package com.github.prule.acc.client
 
 import io.kaitai.struct.ByteBufferKaitaiStream
 import kotlinx.coroutines.DelicateCoroutinesApi
