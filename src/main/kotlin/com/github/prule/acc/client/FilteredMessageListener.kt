@@ -20,7 +20,7 @@ class FilteredMessageListener<T : Any>(
         @Suppress("UNCHECKED_CAST")
         if (clazz.isInstance(body) && filter(body as T)) {
             logger.debug("Matched message")
-            listeners.forEach { listener -> listener.onMessage(bytes, message as T, messageSender) }
+            listeners.forEach { listener -> listener.onMessage(bytes, body as T, messageSender) }
         } else {
             logger.debug("Unmatched message")
         }

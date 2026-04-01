@@ -12,7 +12,7 @@ import java.net.InetAddress
  *
  * Events can be read from the classpath or a local file.
  * ```kotlin
- *   playbackEventsFile = ClasspathSource("io/github/prule/acc/client/simulator/playback-events.csv"),
+ *   playbackEventsFile = ClasspathSource("com/github/prule/acc/client/simulator/playback-events.csv"),
  *
  *   OR
  *
@@ -24,7 +24,7 @@ fun main() {
         AccSimulatorConfiguration(
             port = 9000,
             connectionPassword = "asd",
-            playbackEventsFile = ClasspathSource("io/github/prule/acc/client/simulator/playback-events.csv"),
+            playbackEventsFile = ClasspathSource("com/github/prule/acc/client/simulator/playback-events.csv"),
         ),
     ).start()
 }
@@ -41,7 +41,7 @@ class AccSimulator(
     private val socket = DatagramSocket(configuration.port, InetAddress.getByName("0.0.0.0"))
 
     fun start() {
-        logger.debug("Starting simulator")
+        logger.debug("Starting simulator on port ${configuration.port}")
         MessageReceiver(
             socket,
             listOf(

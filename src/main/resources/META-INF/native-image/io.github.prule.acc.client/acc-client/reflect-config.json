@@ -1,6 +1,6 @@
 [
   {
-    "name": "io.github.prule.acc.client.EventRow",
+    "name": "com.github.prule.acc.client.EventRow",
     "allDeclaredFields": true,
     "allDeclaredMethods": true,
     "allDeclaredConstructors": true
