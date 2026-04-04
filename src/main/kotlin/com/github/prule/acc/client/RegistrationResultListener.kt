@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory
 class RegistrationResultListener(private var clientState: ClientState) : MessageListener<AccBroadcastingInbound> {
     private val logger = LoggerFactory.getLogger(javaClass)
     private val client = AccBroadcastingClient()
+    private val carModelRepository = CarModelRepository()
 
     override fun onMessage(
         bytes: ByteArray,
@@ -28,5 +29,20 @@ class RegistrationResultListener(private var clientState: ClientState) : Message
             clientState.focusedCarIndex = result.focusedCarIndex()
             logger.debug("Received realtime update request - focusedCarIndex = ${clientState.focusedCarIndex}")
         }
+        if (AccBroadcastingInbound.InboundMsgType.TRACK_DATA == message.msgType()) {
+            val result = message.body() as AccBroadcastingInbound.TrackData
+            clientState.track = result.trackName().data()
+        }
+        if (AccBroadcastingInbound.InboundMsgType.ENTRY_LIST == message.msgType()) {
+            val result = message.body() as AccBroadcastingInbound.EntryList
+            clientState.carList = result.carIndexes().toList()
+        }
+        if (AccBroadcastingInbound.InboundMsgType.ENTRY_LIST_CAR == message.msgType()) {
+            val result = message.body() as AccBroadcastingInbound.EntryListCar
+            if (result.carId() == clientState.focusedCarIndex) {
+                clientState.car = carModelRepository.findById(result.carId())
+            }
+        }
+        logger.info("Client state: {}", clientState)
     }
 }

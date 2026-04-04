@@ -16,7 +16,7 @@ import kotlin.time.Duration.Companion.milliseconds
  * An example showing how the client might be used.
  */
 suspend fun main() {
-    val clientState = _root_ide_package_.com.github.prule.acc.client.ClientState()
+    val clientState = ClientState()
     AccClient(
         AccClientConfiguration(
             "Test",
@@ -41,7 +41,6 @@ class AccClient(
 ) {
     private val logger = LoggerFactory.getLogger(javaClass)
     private val client = AccBroadcastingClient()
-    private var connectionId: Int = 0
     private var running = false
 
     /**

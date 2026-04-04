@@ -30,13 +30,13 @@ tasks.test {
 
 tasks.register<JavaExec>("runAccSimulator") {
     group = "application"
-    mainClass.set("io.github.prule.acc.client.simulator.AccSimulatorKt")
+    mainClass.set("com.github.prule.acc.client.simulator.AccSimulatorKt")
     classpath = sourceSets["main"].runtimeClasspath
 }
 
 tasks.register<JavaExec>("runAccClient") {
     group = "application"
-    mainClass.set("io.github.prule.acc.client.AccClientKt")
+    mainClass.set("com.github.prule.acc.client.AccClientKt")
     classpath = sourceSets["main"].runtimeClasspath
 }
 
