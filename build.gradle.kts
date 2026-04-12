@@ -2,11 +2,17 @@ plugins {
   kotlin("jvm") version "2.3.10"
   kotlin("plugin.serialization") version "2.3.10"
   id("maven-publish")
+  id("org.jetbrains.dokka") version "2.2.0"
 }
 
 group = "com.github.prule"
 
 version = "main-SNAPSHOT"
+
+java {
+  withSourcesJar()
+  withJavadocJar()
+}
 
 dependencies {
   api("com.github.prule:acc-messages:main-SNAPSHOT")
@@ -38,7 +44,8 @@ tasks.register<JavaExec>("runAccClient") {
   classpath = sourceSets["main"].runtimeClasspath
 }
 
-publishing {
-  publications { create<MavenPublication>("maven") { from(components["java"]) } }
-  repositories { mavenLocal() }
+// Ensure Dokka is used for the Javadoc JAR
+tasks.named<Jar>("javadocJar") {
+  from(tasks.named("dokkaJavadoc"))
+  dependsOn(tasks.named("dokkaJavadoc"))
 }
