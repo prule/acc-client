@@ -1,8 +1,8 @@
 package com.github.prule.acc.client
 
 import com.github.prule.acc.messages.AccBroadcastingInbound
-import kotlin.reflect.KClass
 import org.slf4j.LoggerFactory
+import kotlin.reflect.KClass
 
 open class FilteredMessageListener<T : Any>(
   private val clazz: KClass<T>,
@@ -21,8 +21,6 @@ open class FilteredMessageListener<T : Any>(
     if (clazz.isInstance(body) && filter(body as T)) {
       logger.debug("Matched message")
       listeners.forEach { listener -> listener.onMessage(bytes, body as T, messageSender) }
-    } else {
-      logger.debug("Unmatched message")
     }
   }
 
