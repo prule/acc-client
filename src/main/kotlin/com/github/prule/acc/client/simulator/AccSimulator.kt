@@ -11,6 +11,7 @@ import java.net.InetAddress
  * Start the simulator with a pre-recorded session (playback-events.csv).
  *
  * Events can be read from the classpath or a local file.
+ *
  * ```kotlin
  *   playbackEventsFile = ClasspathSource("com/github/prule/acc/client/simulator/playback-events.csv"),
  *
@@ -20,39 +21,44 @@ import java.net.InetAddress
  * ```
  */
 fun main() {
-    AccSimulator(
-        AccSimulatorConfiguration(
-            port = 9000,
-            connectionPassword = "asd",
-            playbackEventsFile = ClasspathSource("com/github/prule/acc/client/simulator/playback-events.csv"),
-        ),
-    ).start()
+  AccSimulator(
+      AccSimulatorConfiguration(
+        port = 9000,
+        connectionPassword = "asd",
+        playbackEventsFile =
+          ClasspathSource("com/github/prule/acc/client/simulator/playback-events.csv"),
+      )
+    )
+    .start()
 }
 
 /**
- * Simulates ACC by listening for the handshake request and then playing back a pre-recorded session.
- * Useful for development and debugging.
+ * Simulates ACC by listening for the handshake request and then playing back a pre-recorded
+ * session. Useful for development and debugging.
  */
-class AccSimulator(
-    val configuration: AccSimulatorConfiguration,
-) {
-    private val logger = LoggerFactory.getLogger(javaClass)
-    private var running = true
-    private val socket = DatagramSocket(configuration.port, InetAddress.getByName("0.0.0.0"))
+class AccSimulator(val configuration: AccSimulatorConfiguration) {
+  private val logger = LoggerFactory.getLogger(javaClass)
+  private var running = true
+  private val socket = DatagramSocket(configuration.port, InetAddress.getByName("0.0.0.0"))
 
-    fun start() {
-        logger.debug("Starting simulator on port ${configuration.port}")
-        MessageReceiver(
+  fun start() {
+    logger.debug("Starting simulator on port ${configuration.port}")
+    MessageReceiver(
+        socket,
+        listOf(
+          LoggingListener(),
+          RegisterListener(
             socket,
-            listOf(
-                LoggingListener(),
-                RegisterListener(socket, EventPlayer(configuration.playbackEventsFile)),
-            ),
-        ) { buffer -> AccBroadcastingOutbound(buffer) }
-            .start()
-    }
+            EventPlayer(configuration.playbackEventsFile, configuration.delay),
+          ),
+        ),
+      ) { buffer ->
+        AccBroadcastingOutbound(buffer)
+      }
+      .start()
+  }
 
-    fun stop() {
-        running = false
-    }
+  fun stop() {
+    running = false
+  }
 }
