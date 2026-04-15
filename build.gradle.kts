@@ -16,7 +16,7 @@ java {
 
 dependencies {
   api("com.github.prule:acc-messages:main-SNAPSHOT")
-  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0")
   implementation("ch.qos.logback:logback-classic:1.5.32")
   implementation("com.github.doyaaaaaken:kotlin-csv-jvm:0.15.2")
   implementation("io.github.blackmo18:kotlin-grass-core-jvm:1.0.0")
