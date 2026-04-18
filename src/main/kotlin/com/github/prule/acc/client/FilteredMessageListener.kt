@@ -17,10 +17,18 @@ open class FilteredMessageListener<T : Any>(
     messageSender: MessageSender,
   ) {
     val body = message.body()
+    
+    // Determine the target for the listener: either the wrapper or the body
     @Suppress("UNCHECKED_CAST")
-    if (clazz.isInstance(body) && filter(body as T)) {
-      logger.debug("Matched message")
-      listeners.forEach { listener -> listener.onMessage(bytes, body as T, messageSender) }
+    val target: T? = when {
+        clazz.isInstance(message) -> message as T
+        clazz.isInstance(body) -> body as T
+        else -> null
+    }
+
+    if (target != null && filter(target)) {
+      logger.debug("Matched message: ${target::class.simpleName}")
+      listeners.forEach { listener -> listener.onMessage(bytes, target, messageSender) }
     }
   }
 
