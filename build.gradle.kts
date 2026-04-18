@@ -22,7 +22,7 @@ dependencies {
   implementation("io.github.blackmo18:kotlin-grass-core-jvm:1.0.0")
   implementation("io.github.blackmo18:kotlin-grass-parser-jvm:0.8.0")
   implementation("io.github.blackmo18:kotlin-grass-date-time-jvm:0.8.0")
-  implementation("com.fasterxml.jackson.core:jackson-databind:2.21.1")
+  implementation("com.fasterxml.jackson.core:jackson-databind:2.21.2")
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
   testImplementation(kotlin("test"))
   testImplementation("org.assertj:assertj-core:3.27.7")
