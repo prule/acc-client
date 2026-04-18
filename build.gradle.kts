@@ -28,7 +28,7 @@ dependencies {
   testImplementation("org.assertj:assertj-core:3.27.7")
   testImplementation("org.mockito.kotlin:mockito-kotlin:5.4.0")
   testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
-  testImplementation("io.mockk:mockk:1.13.11") // Added MockK
+  testImplementation("io.mockk:mockk:1.14.9") // Added MockK
 }
 
 kotlin { jvmToolchain(21) }
