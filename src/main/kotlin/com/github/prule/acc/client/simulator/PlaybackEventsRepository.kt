@@ -8,22 +8,22 @@ import io.blackmo18.kotlin.grass.dsl.grass
 import org.slf4j.LoggerFactory
 
 class PlaybackEventsRepository {
-    private val logger = LoggerFactory.getLogger(javaClass)
+  private val logger = LoggerFactory.getLogger(javaClass)
 
-    @OptIn(ExperimentalStdlibApi::class)
-    fun load(file: Source): List<EventRow> {
-        file.inputStream().use { reader ->
-            val csvContents = csvReader().readAllWithHeader(reader)
-            return grass<EventRow>().harvest(csvContents)
-        }
+  @OptIn(ExperimentalStdlibApi::class)
+  fun load(file: Source): List<EventRow> {
+    file.inputStream().use { reader ->
+      val csvContents = csvReader().readAllWithHeader(reader)
+      return grass<EventRow>().harvest(csvContents)
     }
+  }
 }
 
 @OptIn(ExperimentalStdlibApi::class)
 val grass =
     grass<DateTimeTypes> {
-        dateFormat = "yyyy-MM-ddTHH:mm:ss.SSS"
-        timeFormat = "HH:mm:ss"
-        dateTimeSeparator = "/"
-        customDataTypes = arrayListOf(Java8DateTime)
+      dateFormat = "yyyy-MM-ddTHH:mm:ss.SSS"
+      timeFormat = "HH:mm:ss"
+      dateTimeSeparator = "/"
+      customDataTypes = arrayListOf(Java8DateTime)
     }

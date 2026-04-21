@@ -9,19 +9,19 @@ class RegisterListener(
     val socket: DatagramSocket,
     val eventPlayer: EventPlayer,
 ) : MessageListener<AccBroadcastingOutbound> {
-    override fun onMessage(
-        bytes: ByteArray,
-        message: AccBroadcastingOutbound,
-        messageSender: MessageSender,
-    ) {
-        if (AccBroadcastingOutbound.OutboundMsgType.REGISTER_COMMAND_APPLICATION == message.msgType()) {
-            sendRegistrationResult(messageSender)
-            eventPlayer.sendPackets(messageSender)
-        }
+  override fun onMessage(
+      bytes: ByteArray,
+      message: AccBroadcastingOutbound,
+      messageSender: MessageSender,
+  ) {
+    if (AccBroadcastingOutbound.OutboundMsgType.REGISTER_COMMAND_APPLICATION == message.msgType()) {
+      sendRegistrationResult(messageSender)
+      eventPlayer.sendPackets(messageSender)
     }
+  }
 
-    fun sendRegistrationResult(messageSender: MessageSender) {
-        val bytes = "010500000001010000".hexToByteArray()
-        messageSender.send(bytes)
-    }
+  fun sendRegistrationResult(messageSender: MessageSender) {
+    val bytes = "010500000001010000".hexToByteArray()
+    messageSender.send(bytes)
+  }
 }

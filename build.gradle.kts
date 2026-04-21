@@ -3,6 +3,7 @@ plugins {
   kotlin("plugin.serialization") version "2.3.20"
   id("maven-publish")
   id("org.jetbrains.dokka") version "1.9.20"
+  id("com.ncorti.ktfmt.gradle") version "0.26.0"
 }
 
 group = "com.github.prule"
@@ -28,7 +29,7 @@ dependencies {
   testImplementation("org.assertj:assertj-core:3.27.7")
   testImplementation("org.mockito.kotlin:mockito-kotlin:5.4.0")
   testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
-  testImplementation("io.mockk:mockk:1.14.9") // Added MockK
+  testImplementation("io.mockk:mockk:1.14.9")
 }
 
 kotlin { jvmToolchain(21) }

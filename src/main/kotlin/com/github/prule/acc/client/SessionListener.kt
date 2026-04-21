@@ -4,14 +4,14 @@ import com.github.prule.acc.messages.AccBroadcastingInbound
 import org.slf4j.LoggerFactory
 
 class SessionListener(private var sessionState: SessionState) :
-  MessageListener<AccBroadcastingInbound> {
+    MessageListener<AccBroadcastingInbound> {
   private val logger = LoggerFactory.getLogger(javaClass)
   private val carModelRepository = CarModelRepository()
 
   override fun onMessage(
-    bytes: ByteArray,
-    message: AccBroadcastingInbound,
-    messageSender: MessageSender,
+      bytes: ByteArray,
+      message: AccBroadcastingInbound,
+      messageSender: MessageSender,
   ) {
     if (AccBroadcastingInbound.InboundMsgType.TRACK_DATA == message.msgType()) {
       val result = message.body() as AccBroadcastingInbound.TrackData

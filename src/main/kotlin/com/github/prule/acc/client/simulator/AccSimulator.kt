@@ -3,9 +3,9 @@ package com.github.prule.acc.client.simulator
 import com.github.prule.acc.client.LoggingListener
 import com.github.prule.acc.client.MessageReceiver
 import com.github.prule.acc.messages.AccBroadcastingOutbound
-import org.slf4j.LoggerFactory
 import java.net.DatagramSocket
 import java.net.InetAddress
+import org.slf4j.LoggerFactory
 
 /**
  * Start the simulator with a pre-recorded session (playback-events.csv).
@@ -22,14 +22,14 @@ import java.net.InetAddress
  */
 fun main() {
   AccSimulator(
-      AccSimulatorConfiguration(
-        port = 9000,
-        connectionPassword = "asd",
-        playbackEventsFile =
-          ClasspathSource("com/github/prule/acc/client/simulator/playback-events.csv"),
+          AccSimulatorConfiguration(
+              port = 9000,
+              connectionPassword = "asd",
+              playbackEventsFile =
+                  ClasspathSource("com/github/prule/acc/client/simulator/playback-events.csv"),
+          )
       )
-    )
-    .start()
+      .start()
 }
 
 /**
@@ -44,18 +44,18 @@ class AccSimulator(val configuration: AccSimulatorConfiguration) {
   fun start() {
     logger.debug("Starting simulator on port ${configuration.port}")
     MessageReceiver(
-        socket,
-        listOf(
-          LoggingListener(),
-          RegisterListener(
             socket,
-            EventPlayer(configuration.playbackEventsFile, configuration.delay),
-          ),
-        ),
-      ) { buffer ->
-        AccBroadcastingOutbound(buffer)
-      }
-      .start()
+            listOf(
+                LoggingListener(),
+                RegisterListener(
+                    socket,
+                    EventPlayer(configuration.playbackEventsFile, configuration.delay),
+                ),
+            ),
+        ) { buffer ->
+          AccBroadcastingOutbound(buffer)
+        }
+        .start()
   }
 
   fun stop() {
