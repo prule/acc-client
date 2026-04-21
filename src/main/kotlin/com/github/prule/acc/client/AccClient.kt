@@ -16,27 +16,23 @@ import org.slf4j.LoggerFactory
 suspend fun main() {
   val clientState = ClientState()
   AccClient(
-          AccClientConfiguration(
-              "Test",
-              port = 9000,
-              serverIp = "127.0.0.1",
-              //            serverIp = "192.168.86.116",
-          ),
+      AccClientConfiguration(
+        "Test",
+        port = 9000,
+        serverIp = "127.0.0.1",
+        //            serverIp = "192.168.86.116",
       )
-      .connect(
-          listOf(
-              LoggingListener(),
-              CsvWriterListener(
-                  java.nio.file.Path.of("./recordings"),
-              ),
-              RegistrationResultListener(clientState),
-          ),
+    )
+    .connect(
+      listOf(
+        LoggingListener(),
+        CsvWriterListener(java.nio.file.Path.of("./recordings")),
+        RegistrationResultListener(clientState),
       )
+    )
 }
 
-class AccClient(
-    private val configuration: AccClientConfiguration,
-) {
+class AccClient(private val configuration: AccClientConfiguration) {
   private val logger = LoggerFactory.getLogger(javaClass)
   private val client = AccBroadcastingClient()
   private var running = false
@@ -47,25 +43,19 @@ class AccClient(
     running = true
 
     val registerCommand =
-        client.buildRegisterCommandApplication(
-            configuration.name,
-            configuration.connectionPassword,
-            configuration.updateMillis,
-            configuration.connectionPassword,
-        )
+      client.buildRegisterCommandApplication(
+        configuration.name,
+        configuration.connectionPassword,
+        configuration.updateMillis,
+        configuration.connectionPassword,
+      )
 
     withContext(Dispatchers.IO) {
       DatagramSocket().use { socket ->
         socket.soTimeout = 2000
 
         launch {
-          MessageReceiver(
-                  socket,
-                  listeners,
-              ) { buffer ->
-                AccBroadcastingInbound(buffer)
-              }
-              .start()
+          MessageReceiver(socket, listeners) { buffer -> AccBroadcastingInbound(buffer) }.start()
         }
 
         delay(1000.milliseconds)
@@ -83,17 +73,14 @@ class AccClient(
     running = false
   }
 
-  fun send(
-      socket: DatagramSocket,
-      bytes: ByteArray,
-  ) {
+  fun send(socket: DatagramSocket, bytes: ByteArray) {
     val handshakePacket =
-        DatagramPacket(
-            bytes,
-            bytes.size,
-            InetAddress.getByName(configuration.serverIp),
-            configuration.port,
-        )
+      DatagramPacket(
+        bytes,
+        bytes.size,
+        InetAddress.getByName(configuration.serverIp),
+        configuration.port,
+      )
 
     socket.send(handshakePacket)
   }

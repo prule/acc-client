@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
 class AccClientTest {
 
   private val configuration =
-      AccClientConfiguration(name = "TestClient", port = 9000, serverIp = "127.0.0.1")
+    AccClientConfiguration(name = "TestClient", port = 9000, serverIp = "127.0.0.1")
 
   @Test
   fun `should change running state when stopped`() = runTest {

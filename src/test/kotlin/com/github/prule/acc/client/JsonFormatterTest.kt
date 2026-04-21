@@ -10,10 +10,10 @@ class JsonFormatterTest {
   data class SimplePojo(val id: Int, val name: String)
 
   class DummyKaitaiStruct(
-      val data: String,
-      val _io: KaitaiStream? = null,
-      val _parent: KaitaiStruct? = null,
-      val _root: KaitaiStruct? = null,
+    val data: String,
+    val _io: KaitaiStream? = null,
+    val _parent: KaitaiStruct? = null,
+    val _root: KaitaiStruct? = null,
   ) : KaitaiStruct(_io)
 
   @Test

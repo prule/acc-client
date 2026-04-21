@@ -3,13 +3,16 @@
 In this run:
 
 - Start the simulator
-    - This listens for a register packet, and when received it will reply with a register success packet and then send a series of packets read from a CSV file
+    - This listens for a register packet, and when received it will reply with a register success packet and then send a
+      series of packets read from a CSV file
 - Start the client
     - This will send a register packet to the simulator, and then listen for incoming packets
         - Packets received are logged to the console
 
-In this run, the simulator is sourcing packets from `playback-events.csv` which contains one of each packet type from 1-7.
-In actual practice we could record the real packets sent from ACC for a race or practice lap, and play those back when testing our applications.
+In this run, the simulator is sourcing packets from `playback-events.csv` which contains one of each packet type from
+1-7.
+In actual practice we could record the real packets sent from ACC for a race or practice lap, and play those back when
+testing our applications.
 
 ## Start the simulator
 

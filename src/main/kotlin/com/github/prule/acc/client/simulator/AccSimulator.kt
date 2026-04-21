@@ -22,14 +22,14 @@ import org.slf4j.LoggerFactory
  */
 fun main() {
   AccSimulator(
-          AccSimulatorConfiguration(
-              port = 9000,
-              connectionPassword = "asd",
-              playbackEventsFile =
-                  ClasspathSource("com/github/prule/acc/client/simulator/playback-events.csv"),
-          )
+      AccSimulatorConfiguration(
+        port = 9000,
+        connectionPassword = "asd",
+        playbackEventsFile =
+          ClasspathSource("com/github/prule/acc/client/simulator/playback-events.csv"),
       )
-      .start()
+    )
+    .start()
 }
 
 /**
@@ -44,18 +44,18 @@ class AccSimulator(val configuration: AccSimulatorConfiguration) {
   fun start() {
     logger.debug("Starting simulator on port ${configuration.port}")
     MessageReceiver(
+        socket,
+        listOf(
+          LoggingListener(),
+          RegisterListener(
             socket,
-            listOf(
-                LoggingListener(),
-                RegisterListener(
-                    socket,
-                    EventPlayer(configuration.playbackEventsFile, configuration.delay),
-                ),
-            ),
-        ) { buffer ->
-          AccBroadcastingOutbound(buffer)
-        }
-        .start()
+            EventPlayer(configuration.playbackEventsFile, configuration.delay),
+          ),
+        ),
+      ) { buffer ->
+        AccBroadcastingOutbound(buffer)
+      }
+      .start()
   }
 
   fun stop() {

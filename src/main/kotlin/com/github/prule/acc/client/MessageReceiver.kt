@@ -10,9 +10,9 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 import org.slf4j.LoggerFactory
 
 class MessageReceiver<T>(
-    private val socket: DatagramSocket,
-    private val listeners: List<MessageListener<T>>,
-    private val messageFactory: (bytes: ByteBufferKaitaiStream) -> T,
+  private val socket: DatagramSocket,
+  private val listeners: List<MessageListener<T>>,
+  private val messageFactory: (bytes: ByteBufferKaitaiStream) -> T,
 ) {
   private val logger = LoggerFactory.getLogger(javaClass)
 
@@ -44,10 +44,7 @@ class MessageReceiver<T>(
   }
 }
 
-class MessageSender(
-    val socket: DatagramSocket,
-    val socketAddress: SocketAddress,
-) {
+class MessageSender(val socket: DatagramSocket, val socketAddress: SocketAddress) {
   private val logger = LoggerFactory.getLogger(javaClass)
 
   fun send(bytes: ByteArray) {

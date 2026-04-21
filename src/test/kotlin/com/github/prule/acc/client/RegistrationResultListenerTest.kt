@@ -19,7 +19,7 @@ class RegistrationResultListenerTest {
     val mockResult: AccBroadcastingInbound.RegistrationResult = mock()
 
     whenever(mockInbound.msgType())
-        .thenReturn(AccBroadcastingInbound.InboundMsgType.REGISTRATION_RESULT)
+      .thenReturn(AccBroadcastingInbound.InboundMsgType.REGISTRATION_RESULT)
     whenever(mockInbound.body()).thenReturn(mockResult)
     whenever(mockResult.connectionId()).thenReturn(42)
 

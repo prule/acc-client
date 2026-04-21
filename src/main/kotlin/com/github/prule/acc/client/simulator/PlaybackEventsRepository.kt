@@ -21,9 +21,9 @@ class PlaybackEventsRepository {
 
 @OptIn(ExperimentalStdlibApi::class)
 val grass =
-    grass<DateTimeTypes> {
-      dateFormat = "yyyy-MM-ddTHH:mm:ss.SSS"
-      timeFormat = "HH:mm:ss"
-      dateTimeSeparator = "/"
-      customDataTypes = arrayListOf(Java8DateTime)
-    }
+  grass<DateTimeTypes> {
+    dateFormat = "yyyy-MM-ddTHH:mm:ss.SSS"
+    timeFormat = "HH:mm:ss"
+    dateTimeSeparator = "/"
+    customDataTypes = arrayListOf(Java8DateTime)
+  }

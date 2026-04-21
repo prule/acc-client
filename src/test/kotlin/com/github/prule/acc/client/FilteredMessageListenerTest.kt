@@ -21,11 +21,11 @@ class FilteredMessageListenerTest {
   @Test
   fun `should forward message when type matches and filter passes`() {
     val listener =
-        FilteredMessageListener(
-            clazz = TestKaitaiBody::class,
-            filter = { it.data == "match" },
-            listeners = listOf(innerListener),
-        )
+      FilteredMessageListener(
+        clazz = TestKaitaiBody::class,
+        filter = { it.data == "match" },
+        listeners = listOf(innerListener),
+      )
 
     val body = TestKaitaiBody("match")
     val mockInbound: AccBroadcastingInbound = mock()
@@ -39,11 +39,11 @@ class FilteredMessageListenerTest {
   @Test
   fun `should not forward message when type matches but filter fails`() {
     val listener =
-        FilteredMessageListener(
-            clazz = TestKaitaiBody::class,
-            filter = { it.data == "match" },
-            listeners = listOf(innerListener),
-        )
+      FilteredMessageListener(
+        clazz = TestKaitaiBody::class,
+        filter = { it.data == "match" },
+        listeners = listOf(innerListener),
+      )
 
     val body = TestKaitaiBody("mismatch")
     val mockInbound: AccBroadcastingInbound = mock()
@@ -57,11 +57,11 @@ class FilteredMessageListenerTest {
   @Test
   fun `should not forward message when type does not match`() {
     val listener =
-        FilteredMessageListener(
-            clazz = TestKaitaiBody::class,
-            filter = { true },
-            listeners = listOf(innerListener),
-        )
+      FilteredMessageListener(
+        clazz = TestKaitaiBody::class,
+        filter = { true },
+        listeners = listOf(innerListener),
+      )
 
     // Different KaitaiStruct subclass
     class OtherKaitaiBody : KaitaiStruct(null)

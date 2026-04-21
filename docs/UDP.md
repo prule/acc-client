@@ -2,7 +2,8 @@
 
 > For more information see https://blog.jyotiprakash.org/socket-programming-in-java-understanding-udp-communication
 
-To send a reply when using UDP in Java, you must retrieve the sender's IP address and port number from the incoming `DatagramPacket` and use them to address your response. UDP is connectionless, so
+To send a reply when using UDP in Java, you must retrieve the sender's IP address and port number from the incoming
+`DatagramPacket` and use them to address your response. UDP is connectionless, so
 each packet must be individually addressed with the destination information.
 
 ## Key Components
@@ -10,8 +11,10 @@ each packet must be individually addressed with the destination information.
 You will need the following Java components to send a reply:
 
 - **DatagramSocket**: This object is used to send and receive UDP packets. It's your endpoint for communication.
-- **DatagramPacket**: This object represents the packet itself and contains the data (as a byte array), its length, the destination IP address (`InetAddress`), and the port number.
-- **InetAddress and Port Number**: After receiving an incoming `DatagramPacket`, you can extract the sender's address and port using the `packet.getAddress()` and `packet.getPort()` methods.
+- **DatagramPacket**: This object represents the packet itself and contains the data (as a byte array), its length, the
+  destination IP address (`InetAddress`), and the port number.
+- **InetAddress and Port Number**: After receiving an incoming `DatagramPacket`, you can extract the sender's address
+  and port using the `packet.getAddress()` and `packet.getPort()` methods.
 
 ## Steps to Send a Reply (Server-Side Logic)
 
@@ -25,7 +28,8 @@ socket.
 receive(receivePacket); // socket is your DatagramSocket instance
 ```
 
-The `receive()` method will block until a packet arrives. Once a packet is received, the `receivePacket` object automatically holds the sender's address and port information.
+The `receive()` method will block until a packet arrives. Once a packet is received, the `receivePacket` object
+automatically holds the sender's address and port information.
 
 ### 2. Extract Sender Information
 
@@ -43,7 +47,8 @@ byte[] sendBuffer = replyMessage.getBytes();
 
 ### 4. Create the Reply DatagramPacket
 
-You construct a new `DatagramPacket` (or reuse the existing one) specifically addressed to the sender's information you just retrieved.
+You construct a new `DatagramPacket` (or reuse the existing one) specifically addressed to the sender's information you
+just retrieved.
 
 **Option 1: Create a new packet**
 

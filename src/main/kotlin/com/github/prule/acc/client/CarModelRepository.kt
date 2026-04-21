@@ -7,10 +7,10 @@ class CarModelRepository {
   @OptIn(ExperimentalStdlibApi::class)
   private val carModels: List<CarModel> by lazy {
     val resourceStream =
-        javaClass.getResourceAsStream("/com/github/prule/acc/client/car_model_type.csv")
-            ?: throw IllegalStateException(
-                "Resource not found: /com/github/prule/acc/client/car_model_type.csv"
-            )
+      javaClass.getResourceAsStream("/com/github/prule/acc/client/car_model_type.csv")
+        ?: throw IllegalStateException(
+          "Resource not found: /com/github/prule/acc/client/car_model_type.csv"
+        )
     val csvContents = csvReader().readAllWithHeader(resourceStream)
     grass<CarModel>().harvest(csvContents)
   }
@@ -18,7 +18,4 @@ class CarModelRepository {
   fun findById(id: Int): CarModel? = carModels.find { it.id == id }
 }
 
-data class CarModel(
-    val id: Int,
-    val name: String,
-)
+data class CarModel(val id: Int, val name: String)

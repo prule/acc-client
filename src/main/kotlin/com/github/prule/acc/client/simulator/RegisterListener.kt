@@ -5,14 +5,12 @@ import com.github.prule.acc.client.MessageSender
 import com.github.prule.acc.messages.AccBroadcastingOutbound
 import java.net.DatagramSocket
 
-class RegisterListener(
-    val socket: DatagramSocket,
-    val eventPlayer: EventPlayer,
-) : MessageListener<AccBroadcastingOutbound> {
+class RegisterListener(val socket: DatagramSocket, val eventPlayer: EventPlayer) :
+  MessageListener<AccBroadcastingOutbound> {
   override fun onMessage(
-      bytes: ByteArray,
-      message: AccBroadcastingOutbound,
-      messageSender: MessageSender,
+    bytes: ByteArray,
+    message: AccBroadcastingOutbound,
+    messageSender: MessageSender,
   ) {
     if (AccBroadcastingOutbound.OutboundMsgType.REGISTER_COMMAND_APPLICATION == message.msgType()) {
       sendRegistrationResult(messageSender)

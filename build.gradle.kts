@@ -15,6 +15,11 @@ java {
   withJavadocJar()
 }
 
+ktfmt {
+  // Google style - 2 space indentation & automatically adds/removes trailing commas
+  googleStyle()
+}
+
 dependencies {
   api("com.github.prule:acc-messages:main-SNAPSHOT")
   implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0")

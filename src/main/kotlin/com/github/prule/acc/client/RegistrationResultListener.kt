@@ -5,14 +5,14 @@ import com.github.prule.acc.messages.AccBroadcastingInbound
 import org.slf4j.LoggerFactory
 
 class RegistrationResultListener(private var clientState: ClientState) :
-    MessageListener<AccBroadcastingInbound> {
+  MessageListener<AccBroadcastingInbound> {
   private val logger = LoggerFactory.getLogger(javaClass)
   private val client = AccBroadcastingClient()
 
   override fun onMessage(
-      bytes: ByteArray,
-      message: AccBroadcastingInbound,
-      messageSender: MessageSender,
+    bytes: ByteArray,
+    message: AccBroadcastingInbound,
+    messageSender: MessageSender,
   ) {
     if (AccBroadcastingInbound.InboundMsgType.REGISTRATION_RESULT == message.msgType()) {
       val result = message.body() as AccBroadcastingInbound.RegistrationResult
@@ -29,7 +29,7 @@ class RegistrationResultListener(private var clientState: ClientState) :
       val result = message.body() as AccBroadcastingInbound.RealtimeUpdate
       clientState.focusedCarIndex = result.focusedCarIndex()
       logger.debug(
-          "Received realtime update request - focusedCarIndex = ${clientState.focusedCarIndex}"
+        "Received realtime update request - focusedCarIndex = ${clientState.focusedCarIndex}"
       )
       logger.info("Client state: {}", clientState)
     }
