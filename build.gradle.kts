@@ -2,7 +2,7 @@ plugins {
   kotlin("jvm") version "2.3.20"
   kotlin("plugin.serialization") version "2.3.20"
   id("maven-publish")
-  id("org.jetbrains.dokka") version "1.9.20"
+  id("org.jetbrains.dokka") version "2.2.0"
   id("com.ncorti.ktfmt.gradle") version "0.26.0"
 }
 
