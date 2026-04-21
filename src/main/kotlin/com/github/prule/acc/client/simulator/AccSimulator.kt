@@ -3,9 +3,9 @@ package com.github.prule.acc.client.simulator
 import com.github.prule.acc.client.LoggingListener
 import com.github.prule.acc.client.MessageReceiver
 import com.github.prule.acc.messages.AccBroadcastingOutbound
+import org.slf4j.LoggerFactory
 import java.net.DatagramSocket
 import java.net.InetAddress
-import org.slf4j.LoggerFactory
 
 /**
  * Start the simulator with a pre-recorded session (playback-events.csv).

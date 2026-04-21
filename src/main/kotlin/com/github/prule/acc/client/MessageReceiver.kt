@@ -1,13 +1,13 @@
 package com.github.prule.acc.client
 
 import io.kaitai.struct.ByteBufferKaitaiStream
+import kotlinx.coroutines.DelicateCoroutinesApi
+import org.slf4j.LoggerFactory
 import java.net.DatagramPacket
 import java.net.DatagramSocket
 import java.net.SocketAddress
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
-import kotlinx.coroutines.DelicateCoroutinesApi
-import org.slf4j.LoggerFactory
 
 class MessageReceiver<T>(
   private val socket: DatagramSocket,

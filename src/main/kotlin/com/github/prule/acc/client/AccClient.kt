@@ -2,15 +2,15 @@ package com.github.prule.acc.client
 
 import com.github.prule.acc.messages.AccBroadcastingClient
 import com.github.prule.acc.messages.AccBroadcastingInbound
-import java.net.DatagramPacket
-import java.net.DatagramSocket
-import java.net.InetAddress
-import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.slf4j.LoggerFactory
+import java.net.DatagramPacket
+import java.net.DatagramSocket
+import java.net.InetAddress
+import kotlin.time.Duration.Companion.milliseconds
 
 /** An example showing how the client might be used. */
 suspend fun main() {

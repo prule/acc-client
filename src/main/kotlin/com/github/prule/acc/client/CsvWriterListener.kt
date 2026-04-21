@@ -3,10 +3,10 @@ package com.github.prule.acc.client
 import com.github.doyaaaaaken.kotlincsv.client.CsvFileWriter
 import com.github.doyaaaaaken.kotlincsv.client.KotlinCsvExperimental
 import com.github.doyaaaaaken.kotlincsv.dsl.csvWriter
+import org.slf4j.LoggerFactory
 import java.io.File
 import java.nio.file.Path
 import java.time.LocalDateTime
-import org.slf4j.LoggerFactory
 
 @OptIn(KotlinCsvExperimental::class)
 class CsvWriterListener<T>(directory: Path?) : MessageListener<T> {
