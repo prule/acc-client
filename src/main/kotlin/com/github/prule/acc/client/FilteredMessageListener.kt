@@ -1,8 +1,8 @@
 package com.github.prule.acc.client
 
 import com.github.prule.acc.messages.AccBroadcastingInbound
-import org.slf4j.LoggerFactory
 import kotlin.reflect.KClass
+import org.slf4j.LoggerFactory
 
 open class FilteredMessageListener<T : Any>(
   private val clazz: KClass<T>,
