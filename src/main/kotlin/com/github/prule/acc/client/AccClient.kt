@@ -12,26 +12,48 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.slf4j.LoggerFactory
 
-/** An example showing how the client might be used. */
+/**
+ * Example wiring.
+ *
+ * Listener ordering contract for [AccClient.connect]:
+ * 1. [LoggingListener] (or any pure observer) — no state
+ * 2. [ContextUpdater] — populates [ClientContext]; MUST run before [SessionDetector]
+ * 3. [SessionDetector] — snapshots [ClientContext] on session start
+ *
+ * [ClientContext] survives reconnects within a single [AccClient] lifetime, so cached track + cars
+ * stay available across socket drops.
+ */
 suspend fun main() {
-  val clientState = ClientState()
+  val context = ClientContext()
   AccClient(
       AccClientConfiguration(
         "Test",
         port = 9000,
         serverIp = "127.0.0.1",
+        //        serverIp = "desktop-chff66k",
         //            serverIp = "192.168.86.116",
       )
     )
     .connect(
       listOf(
         LoggingListener(),
-        CsvWriterListener(java.nio.file.Path.of("./recordings")),
-        RegistrationResultListener(clientState),
+        ContextUpdater(context),
+        SessionDetector(
+          context,
+          listOf(RecordingSessionListener(java.nio.file.Path.of("./recordings"))),
+        ),
       )
     )
 }
 
+/**
+ * Manages the UDP socket lifecycle to the ACC broadcasting server: register → receive → reconnect
+ * on socket timeout.
+ *
+ * Listeners passed to [connect] receive every inbound message. Ordering matters when listeners have
+ * a producer/consumer relationship — see the contract on [main]. In particular, [ContextUpdater]
+ * must precede [SessionDetector].
+ */
 class AccClient(private val configuration: AccClientConfiguration) {
   private val logger = LoggerFactory.getLogger(javaClass)
   private val client = AccBroadcastingClient()
@@ -51,18 +73,24 @@ class AccClient(private val configuration: AccClientConfiguration) {
       )
 
     withContext(Dispatchers.IO) {
-      DatagramSocket().use { socket ->
-        socket.soTimeout = 2000
+      while (running) {
+        logger.debug("Opening socket and registering")
+        DatagramSocket().use { socket ->
+          socket.soTimeout = 2000
 
-        launch {
-          MessageReceiver(socket, listeners) { buffer -> AccBroadcastingInbound(buffer) }.start()
+          val job = launch {
+            MessageReceiver(socket, listeners) { buffer -> AccBroadcastingInbound(buffer) }.start()
+          }
+
+          delay(1000.milliseconds)
+          send(socket, registerCommand)
+          logger.debug("Sent register command, listening for data")
+
+          job.join()
         }
 
-        delay(1000.milliseconds)
-        send(socket, registerCommand)
-        logger.debug("Sent register command, listening for data")
-
-        while (running) {
+        if (running) {
+          logger.debug("Session ended, waiting before reconnecting")
           delay(1000.milliseconds)
         }
       }

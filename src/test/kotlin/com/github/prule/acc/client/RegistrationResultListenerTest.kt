@@ -3,9 +3,13 @@ package com.github.prule.acc.client
 import com.github.prule.acc.messages.AccBroadcastingInbound
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.mockito.kotlin.atLeast
+import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
+@Suppress("DEPRECATION")
 class RegistrationResultListenerTest {
 
   private val clientState = ClientState()
@@ -26,5 +30,7 @@ class RegistrationResultListenerTest {
     listener.onMessage(bytes, mockInbound, mockSender)
 
     assertThat(clientState.connectionId).isEqualTo(42)
+    // Wrapper now also requests entry list + track data from the server.
+    verify(mockSender, atLeast(1)).send(any())
   }
 }

@@ -25,10 +25,18 @@ class SessionListener(private var sessionState: SessionState) :
       val result = message.body() as AccBroadcastingInbound.EntryListCar
       sessionState.carMap[result.carId()] = result
     }
-    //        if (AccBroadcastingInbound.InboundMsgType.REALTIME_CAR_UPDATE == message.msgType()) {
-    //            val result = message.body() as AccBroadcastingInbound.RealtimeCarUpdate
-    //            sessionState.laps[result.carIndex()][result.laps()] = result
-    //        }
+    if (AccBroadcastingInbound.InboundMsgType.REALTIME_UPDATE == message.msgType()) {
+      val result = message.body() as AccBroadcastingInbound.RealtimeUpdate
+      sessionState.focusedCarIndex = result.focusedCarIndex()
+    }
+    if (AccBroadcastingInbound.InboundMsgType.REALTIME_CAR_UPDATE == message.msgType()) {
+      val result = message.body() as AccBroadcastingInbound.RealtimeCarUpdate
+      sessionState.laps.getOrPut(result.carIndex()) { mutableMapOf() }[result.laps()] = result
+    }
+    if (AccBroadcastingInbound.InboundMsgType.BROADCASTING_EVENT == message.msgType()) {
+      val result = message.body() as AccBroadcastingInbound.BroadcastingEvent
+      sessionState.lapsCompleted.getOrPut(result.carId()) { mutableListOf() }.add(result)
+    }
     logger.info("Session state: {}", sessionState)
   }
 }

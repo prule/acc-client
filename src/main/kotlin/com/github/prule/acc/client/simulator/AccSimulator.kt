@@ -26,7 +26,11 @@ fun main() {
         port = 9000,
         connectionPassword = "asd",
         playbackEventsFile =
-          ClasspathSource("com/github/prule/acc/client/simulator/playback-events.csv"),
+          //          ClasspathSource("com/github/prule/acc/client/simulator/playback-events.csv"),
+          //          FileSource("./recordings/playback-events.csv"),
+          //
+          // FileSource("./recordings/simulator-recording-2026-05-04T18-49-26.591594-race.csv"),
+          FileSource("./recordings/full-race-donington.csv"),
       )
     )
     .start()

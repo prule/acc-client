@@ -4,12 +4,13 @@ import com.github.prule.acc.messages.AccBroadcastingInbound
 
 class SessionState {
   var track: String? = null
+  var focusedCarIndex: Int = -1
   var carList: List<Int> = emptyList()
   val carMap = mutableMapOf<Int, AccBroadcastingInbound.EntryListCar>()
-  val laps = mutableMapOf<Int, Map<Int, AccBroadcastingInbound.RealtimeCarUpdate>>()
-  val lapsCompleted = mutableMapOf<Int, Map<Int, AccBroadcastingInbound.BroadcastingEvent>>()
+  val laps = mutableMapOf<Int, MutableMap<Int, AccBroadcastingInbound.RealtimeCarUpdate>>()
+  val lapsCompleted = mutableMapOf<Int, MutableList<AccBroadcastingInbound.BroadcastingEvent>>()
 
   override fun toString(): String {
-    return "SessionState(track=$track, list=$carList)"
+    return "SessionState(track=$track, focusedCarIndex=$focusedCarIndex, cars=${carList.size})"
   }
 }

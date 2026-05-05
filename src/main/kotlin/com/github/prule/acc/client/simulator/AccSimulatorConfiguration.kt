@@ -8,5 +8,5 @@ data class AccSimulatorConfiguration(
   val connectionPassword: String,
   val playbackEventsFile: Source,
   /** milliseconds delay between each message sent */
-  val delay: Long = 100,
+  val delay: Long = 10,
 )
