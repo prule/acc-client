@@ -49,4 +49,3 @@ class ClientContext {
     "ClientContext(connectionId=$connectionId, focusedCarIndex=$focusedCarIndex, " +
       "track=${track?.name}, cars=${cars.size}, entryListVersion=$entryListVersion)"
 }
-

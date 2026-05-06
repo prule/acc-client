@@ -27,9 +27,7 @@ data class RawPreamble(
   override fun hashCode(): Int {
     var result = trackData?.contentHashCode() ?: 0
     result = 31 * result + (entryList?.contentHashCode() ?: 0)
-    result =
-      31 * result +
-        carEntries.entries.sumOf { (k, v) -> 31 * k + v.contentHashCode() }
+    result = 31 * result + carEntries.entries.sumOf { (k, v) -> 31 * k + v.contentHashCode() }
     return result
   }
 }

@@ -1,5 +1,7 @@
 package com.github.prule.acc.client.example
 
+import ch.qos.logback.classic.Level
+import ch.qos.logback.classic.Logger as LogbackLogger
 import com.github.prule.acc.client.AccClient
 import com.github.prule.acc.client.AccClientConfiguration
 import com.github.prule.acc.client.CarModelRepository
@@ -7,8 +9,6 @@ import com.github.prule.acc.client.ClientContext
 import com.github.prule.acc.client.ContextUpdater
 import com.github.prule.acc.client.MessageListener
 import com.github.prule.acc.client.MessageSender
-import ch.qos.logback.classic.Level
-import ch.qos.logback.classic.Logger as LogbackLogger
 import com.github.prule.acc.messages.AccBroadcastingInbound
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -17,7 +17,6 @@ import org.slf4j.LoggerFactory
  * Live single-line CLI dashboard showing what the ACC broadcasting view is currently focused on.
  *
  * Output (refreshed in place via `\r`):
- *
  * ```
  * [Red Bull Ring] focused=#13  Mercedes-AMG GT3 Evo            G:2   120kmh  lap  11.9%
  * ```
@@ -28,8 +27,8 @@ import org.slf4j.LoggerFactory
  * - Looking up the human-readable car model name via [CarModelRepository].
  * - Pulling per-tick fields from [AccBroadcastingInbound.RealtimeCarUpdate].
  *
- * Run with `./gradlew runFocusedCarDashboard` against a running ACC server (or
- * `./gradlew runAccSimulator` in another terminal for offline playback).
+ * Run with `./gradlew runFocusedCarDashboard` against a running ACC server (or `./gradlew
+ * runAccSimulator` in another terminal for offline playback).
  */
 class FocusedCarDashboard(
   private val context: ClientContext,
@@ -96,15 +95,8 @@ class FocusedCarDashboard(
     val lapPct = (spline * 100f).coerceIn(0f, 100f)
     // Padded fields keep the line a fixed width so `\r` overwrites cleanly.
     val line =
-      "[%-20s] focused=#%-3s %-30s G:%-2s %3dkmh  L%-3d lap %5.1f%%   ".format(
-        truncate(track, 20),
-        idxLabel,
-        truncate(carName, 30),
-        gearLabel,
-        kmh,
-        laps,
-        lapPct,
-      )
+      "[%-20s] focused=#%-3s %-30s G:%-2s %3dkmh  L%-3d lap %5.1f%%   "
+        .format(truncate(track, 20), idxLabel, truncate(carName, 30), gearLabel, kmh, laps, lapPct)
     print("\r$line")
     System.out.flush()
   }
@@ -133,35 +125,24 @@ class FocusedCarDashboard(
 /**
  * Runnable entrypoint. Connects to a local ACC server (or the simulator) on port 9000.
  *
- * Edit [AccClientConfiguration] to point at a different host or port. Defaults match
- * `./gradlew runAccSimulator` so you can prove the wiring without a running game.
+ * Edit [AccClientConfiguration] to point at a different host or port. Defaults match `./gradlew
+ * runAccSimulator` so you can prove the wiring without a running game.
  *
- * Sets the root log level to WARN so DEBUG / INFO chatter doesn't clobber the in-place
- * single-line dashboard.
+ * Sets the root log level to WARN so DEBUG / INFO chatter doesn't clobber the in-place single-line
+ * dashboard.
  */
 suspend fun main() {
   setRootLogLevel(Level.WARN)
 
   val context = ClientContext()
-  AccClient(
-      AccClientConfiguration(
-        name = "Dashboard",
-        port = 9000,
-        serverIp = "127.0.0.1",
-      )
-    )
-    .connect(
-      listOf(
-        ContextUpdater(context),
-        FocusedCarDashboard(context),
-      )
-    )
+  AccClient(AccClientConfiguration(name = "Dashboard", port = 9000, serverIp = "127.0.0.1"))
+    .connect(listOf(ContextUpdater(context), FocusedCarDashboard(context)))
 }
 
 /**
- * Set the slf4j root logger level at runtime. Requires logback-classic on the classpath
- * (already an `implementation` dep of this library). The cast will fail if a different
- * slf4j backend is used — swap to that backend's API if needed.
+ * Set the slf4j root logger level at runtime. Requires logback-classic on the classpath (already an
+ * `implementation` dep of this library). The cast will fail if a different slf4j backend is used —
+ * swap to that backend's API if needed.
  */
 private fun setRootLogLevel(level: Level) {
   val root = LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME) as LogbackLogger

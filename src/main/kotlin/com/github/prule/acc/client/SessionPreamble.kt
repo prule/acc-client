@@ -12,8 +12,7 @@ import java.time.Instant
  * @property entryListVersion monotonic counter from [ClientContext]; bumped on track change or new
  *   ENTRY_LIST. Useful for diffing across sessions.
  * @property capturedAt wall-clock time the snapshot was taken
- * @property raw last-seen raw bytes for each preamble message — for byte-perfect replay /
- *   recording
+ * @property raw last-seen raw bytes for each preamble message — for byte-perfect replay / recording
  */
 data class SessionPreamble(
   val track: TrackInfo,

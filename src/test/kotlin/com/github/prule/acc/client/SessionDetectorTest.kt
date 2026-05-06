@@ -94,9 +94,7 @@ class SessionDetectorTest {
     detector.onMessage(rtBytes, rtMsg, sender)
 
     verify(exactly = 1) {
-      listener.onSessionStart(
-        match { it.track.name == "Red Bull Ring" && it.cars.containsKey(0) }
-      )
+      listener.onSessionStart(match { it.track.name == "Red Bull Ring" && it.cars.containsKey(0) })
     }
   }
 
