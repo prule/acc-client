@@ -30,6 +30,39 @@ A Kotlin client for Assetto Corsa Competizione (ACC) Dedicated Server UDP commun
   debugging).
 - **Car & Track Models**: Includes repositories to handle ACC car models and track data.
 
+## Documentation
+
+Getting started:
+
+- [Consuming.md](docs/Consuming.md) — depending on this library via JitPack (Gradle / Maven) + minimal usage example.
+- [Examples.md](docs/Examples.md) — runnable sample apps (`FocusedCarDashboard` etc.) — end-to-end smoke tests.
+- [Glossary.md](docs/Glossary.md) — ACC and library terms in one place.
+- [Sample Run.md](docs/Sample%20Run.md) — annotated end-to-end log output.
+
+User guides:
+
+- [Recording.md](docs/Recording.md) — recording sessions to CSV, replaying with the simulator, CSV schema.
+- [Listeners.md](docs/Listeners.md) — listener interfaces, lifecycle hooks, ordering rules, error semantics.
+- [ClientContext.md](docs/ClientContext.md) — shared state object reference, plus `AccClientConfiguration` fields.
+- [Lifecycle.md](docs/Lifecycle.md) — register handshake, reconnect-on-timeout, what state survives.
+- [CarModels.md](docs/CarModels.md) — `CarModelRepository` and the bundled `carModelType` lookup CSV.
+- [Logging.md](docs/Logging.md) — slf4j + logback configuration, log-level tuning, logger inventory.
+
+Design + protocol:
+
+- [SessionContextStrategy.md](docs/SessionContextStrategy.md) — design spec for cross-session context caching.
+- [WireProtocol.md](docs/WireProtocol.md) — message type bytes, register handshake, phase / cup / event enums.
+
+Contributor guides:
+
+- [Architecture.md](docs/Architecture.md) — module map, layering, data flow, dependency graph.
+- [ListenerRecipes.md](docs/ListenerRecipes.md) — copy-paste examples (lap tracker, telemetry exporter, etc.).
+- [Testing.md](docs/Testing.md) — mock vs real-bytes fixture strategies, running tests.
+- [Migration.md](docs/Migration.md) — upgrading from the pre-`ContextUpdater` API.
+- [UDP.md](docs/UDP.md) — generic Java UDP request/reply primer.
+- [`CONTRIBUTING.md`](CONTRIBUTING.md) — build, test, code style, PR workflow.
+- [`CHANGELOG.md`](CHANGELOG.md) — version history.
+
 ## Example use
 
 Install the jar locally so other projects can use it:

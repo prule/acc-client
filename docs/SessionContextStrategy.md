@@ -27,7 +27,7 @@ Single source of truth for cross-session data. Owned by `AccClient`, passed to l
 ```
 class ClientContext {
   var connectionId: Int = 0
-  var focusedCarIndex: Int = 0
+  var focusedCarIndex: Int? = null
   var track: TrackInfo? = null
   val cars: MutableMap<Int, CarEntry> = ConcurrentHashMap()
   var entryListVersion: Long = 0  // bumped on ENTRY_LIST receipt
