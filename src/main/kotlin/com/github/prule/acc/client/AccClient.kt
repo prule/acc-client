@@ -29,8 +29,8 @@ suspend fun main() {
       AccClientConfiguration(
         "Test",
         port = 9000,
-        serverIp = "127.0.0.1",
-        //        serverIp = "desktop-chff66k",
+        //        serverIp = "127.0.0.1",
+        serverIp = "desktop-chff66k",
         //            serverIp = "192.168.86.116",
       )
     )

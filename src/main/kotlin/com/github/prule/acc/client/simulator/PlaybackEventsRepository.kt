@@ -5,10 +5,8 @@ import com.github.prule.acc.client.EventRow
 import io.blackmo18.kotlin.grass.core.DateTimeTypes
 import io.blackmo18.kotlin.grass.date.time.Java8DateTime
 import io.blackmo18.kotlin.grass.dsl.grass
-import org.slf4j.LoggerFactory
 
 class PlaybackEventsRepository {
-  private val logger = LoggerFactory.getLogger(javaClass)
 
   @OptIn(ExperimentalStdlibApi::class)
   fun load(file: Source): List<EventRow> {
