@@ -37,6 +37,7 @@ class FocusedCarDashboard(
   @Volatile private var gear: Int = 1 // ACC convention: 0=R, 1=N, 2=1st...
   @Volatile private var kmh: Int = 0
   @Volatile private var spline: Float = 0f
+  @Volatile private var laps: Int = 0
 
   override fun onMessage(
     bytes: ByteArray,
@@ -50,6 +51,7 @@ class FocusedCarDashboard(
           gear = numeric(u, "gear")
           kmh = numeric(u, "kmh")
           spline = floating(u, "splinePosition")
+          laps = numeric(u, "laps")
           render()
         }
       }
@@ -88,12 +90,13 @@ class FocusedCarDashboard(
     val lapPct = (spline * 100f).coerceIn(0f, 100f)
     // Padded fields keep the line a fixed width so `\r` overwrites cleanly.
     val line =
-      "[%-20s] focused=#%-3d %-30s G:%-2s %3dkmh  lap %5.1f%%   ".format(
+      "[%-20s] focused=#%-3d %-30s G:%-2s %3dkmh  L%-3d lap %5.1f%%   ".format(
         truncate(track, 20),
         idx,
         truncate(carName, 30),
         gearLabel,
         kmh,
+        laps,
         lapPct,
       )
     print("\r$line")
