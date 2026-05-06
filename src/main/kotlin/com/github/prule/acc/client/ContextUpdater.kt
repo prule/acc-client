@@ -23,8 +23,7 @@ import org.slf4j.LoggerFactory
  * MUST be installed before [SessionDetector] in the listener list so that [ClientContext] is up to
  * date when [SessionDetector] snapshots it on session start.
  */
-class ContextUpdater(private val context: ClientContext) :
-  MessageListener<AccBroadcastingInbound> {
+class ContextUpdater(private val context: ClientContext) : MessageListener<AccBroadcastingInbound> {
   private val logger = LoggerFactory.getLogger(javaClass)
   private val client = AccBroadcastingClient()
 
@@ -92,7 +91,7 @@ class ContextUpdater(private val context: ClientContext) :
         context.cars[entry.carId] = entry
         synchronized(context.rawLock) { context.rawCarEntries[entry.carId] = bytes.copyOf() }
         context.lastPreambleAt = Instant.now()
-        logger.debug("Car entry cached: carId={}", entry.carId)
+        //        logger.debug("Car entry cached: carId={}", entry.carId)
       }
 
       AccBroadcastingInbound.InboundMsgType.REALTIME_UPDATE -> {

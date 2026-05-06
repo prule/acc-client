@@ -41,7 +41,9 @@ class ContextUpdaterTest {
   }
 
   @Test
-  fun `realtime update sets focusedCarIndex`() {
+  fun `focusedCarIndex starts null and is set on realtime update`() {
+    assertThat(context.focusedCarIndex).isNull()
+
     val body = mockk<AccBroadcastingInbound.RealtimeUpdate>()
     every { body.focusedCarIndex() } returns 13
 

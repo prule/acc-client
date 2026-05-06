@@ -47,7 +47,8 @@ class FocusedCarDashboard(
     when (message.msgType()) {
       AccBroadcastingInbound.InboundMsgType.REALTIME_CAR_UPDATE -> {
         val u = message.body() as AccBroadcastingInbound.RealtimeCarUpdate
-        if (u.carIndex() == context.focusedCarIndex) {
+        val focused = context.focusedCarIndex ?: return // no focus set yet
+        if (u.carIndex() == focused) {
           gear = numeric(u, "gear")
           kmh = numeric(u, "kmh")
           spline = floating(u, "splinePosition")
@@ -79,7 +80,8 @@ class FocusedCarDashboard(
   private fun render() {
     val track = context.track?.name ?: "—"
     val idx = context.focusedCarIndex
-    val car = context.cars[idx]
+    val idxLabel = idx?.toString() ?: "—"
+    val car = idx?.let { context.cars[it] }
     val carName = car?.let { carModels.findById(it.carModelType)?.name } ?: "?"
     val gearLabel =
       when (gear) {
@@ -90,9 +92,9 @@ class FocusedCarDashboard(
     val lapPct = (spline * 100f).coerceIn(0f, 100f)
     // Padded fields keep the line a fixed width so `\r` overwrites cleanly.
     val line =
-      "[%-20s] focused=#%-3d %-30s G:%-2s %3dkmh  L%-3d lap %5.1f%%   ".format(
+      "[%-20s] focused=#%-3s %-30s G:%-2s %3dkmh  L%-3d lap %5.1f%%   ".format(
         truncate(track, 20),
-        idx,
+        idxLabel,
         truncate(carName, 30),
         gearLabel,
         kmh,

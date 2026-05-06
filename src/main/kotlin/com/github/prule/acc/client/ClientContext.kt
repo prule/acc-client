@@ -14,7 +14,11 @@ import java.util.concurrent.ConcurrentHashMap
  */
 class ClientContext {
   @Volatile var connectionId: Int = 0
-  @Volatile var focusedCarIndex: Int = 0
+  /**
+   * Index of the car currently focused by ACC's broadcasting view. `null` until the first
+   * `REALTIME_UPDATE` arrives — distinguishes "no value yet" from a real focused carId of 0.
+   */
+  @Volatile var focusedCarIndex: Int? = null
   @Volatile var track: TrackInfo? = null
   @Volatile var entryListVersion: Long = 0
   @Volatile var lastPreambleAt: Instant? = null
