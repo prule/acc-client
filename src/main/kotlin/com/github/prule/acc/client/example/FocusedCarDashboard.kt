@@ -7,7 +7,11 @@ import com.github.prule.acc.client.ClientContext
 import com.github.prule.acc.client.ContextUpdater
 import com.github.prule.acc.client.MessageListener
 import com.github.prule.acc.client.MessageSender
+import ch.qos.logback.classic.Level
+import ch.qos.logback.classic.Logger as LogbackLogger
 import com.github.prule.acc.messages.AccBroadcastingInbound
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 /**
  * Live single-line CLI dashboard showing what the ACC broadcasting view is currently focused on.
@@ -131,8 +135,13 @@ class FocusedCarDashboard(
  *
  * Edit [AccClientConfiguration] to point at a different host or port. Defaults match
  * `./gradlew runAccSimulator` so you can prove the wiring without a running game.
+ *
+ * Sets the root log level to WARN so DEBUG / INFO chatter doesn't clobber the in-place
+ * single-line dashboard.
  */
 suspend fun main() {
+  setRootLogLevel(Level.WARN)
+
   val context = ClientContext()
   AccClient(
       AccClientConfiguration(
@@ -147,4 +156,14 @@ suspend fun main() {
         FocusedCarDashboard(context),
       )
     )
+}
+
+/**
+ * Set the slf4j root logger level at runtime. Requires logback-classic on the classpath
+ * (already an `implementation` dep of this library). The cast will fail if a different
+ * slf4j backend is used — swap to that backend's API if needed.
+ */
+private fun setRootLogLevel(level: Level) {
+  val root = LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME) as LogbackLogger
+  root.level = level
 }
