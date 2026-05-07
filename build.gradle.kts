@@ -2,7 +2,7 @@ plugins {
   kotlin("jvm") version "2.3.21"
   kotlin("plugin.serialization") version "2.3.21"
   id("maven-publish")
-  id("org.jetbrains.dokka") version "1.9.20"
+  id("org.jetbrains.dokka") version "2.2.0"
   id("com.ncorti.ktfmt.gradle") version "0.26.0"
 }
 
@@ -59,12 +59,6 @@ tasks.register<JavaExec>("runFocusedCarDashboard") {
   mainClass.set("com.github.prule.acc.client.example.FocusedCarDashboardKt")
   classpath = sourceSets["main"].runtimeClasspath
   standardInput = System.`in`
-}
-
-// Ensure Dokka is used for the Javadoc JAR
-tasks.named<Jar>("javadocJar") {
-  from(tasks.named("dokkaJavadoc"))
-  dependsOn(tasks.named("dokkaJavadoc"))
 }
 
 publishing {
