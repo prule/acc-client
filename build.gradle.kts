@@ -1,5 +1,5 @@
 plugins {
-  kotlin("jvm") version "2.3.20"
+  kotlin("jvm") version "2.3.21"
   kotlin("plugin.serialization") version "2.3.21"
   id("maven-publish")
   id("org.jetbrains.dokka") version "1.9.20"
@@ -24,7 +24,7 @@ dependencies {
   api("com.github.prule:acc-messages:main-SNAPSHOT")
   implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0")
   implementation("ch.qos.logback:logback-classic:1.5.32")
-  implementation("com.github.doyaaaaaken:kotlin-csv-jvm:0.15.2")
+  implementation("com.github.doyaaaaaken:kotlin-csv-jvm:1.10.0")
   implementation("io.github.blackmo18:kotlin-grass-core-jvm:1.0.0")
   implementation("io.github.blackmo18:kotlin-grass-parser-jvm:0.8.0")
   implementation("io.github.blackmo18:kotlin-grass-date-time-jvm:0.8.0")
@@ -32,7 +32,7 @@ dependencies {
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
   testImplementation(kotlin("test"))
   testImplementation("org.assertj:assertj-core:3.27.7")
-  testImplementation("org.mockito.kotlin:mockito-kotlin:5.4.0")
+  testImplementation("org.mockito.kotlin:mockito-kotlin:6.3.0")
   testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
   testImplementation("io.mockk:mockk:1.14.9")
 }
@@ -51,6 +51,14 @@ tasks.register<JavaExec>("runAccClient") {
   group = "application"
   mainClass.set("com.github.prule.acc.client.AccClientKt")
   classpath = sourceSets["main"].runtimeClasspath
+}
+
+tasks.register<JavaExec>("runFocusedCarDashboard") {
+  group = "application"
+  description = "Live CLI view of the focused car (track, model, gear, speed, lap %)."
+  mainClass.set("com.github.prule.acc.client.example.FocusedCarDashboardKt")
+  classpath = sourceSets["main"].runtimeClasspath
+  standardInput = System.`in`
 }
 
 // Ensure Dokka is used for the Javadoc JAR

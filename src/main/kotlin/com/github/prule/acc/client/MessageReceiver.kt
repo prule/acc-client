@@ -32,7 +32,7 @@ class MessageReceiver<T>(
           listeners.forEach { listener -> listener.onMessage(bytes, message, sender) }
         } catch (e: java.net.SocketTimeoutException) {
           logger.debug("Socket timed out. Session ended.")
-          continue
+          break
         } catch (e: Exception) {
           logger.error("An error occurred: $e", e)
           break

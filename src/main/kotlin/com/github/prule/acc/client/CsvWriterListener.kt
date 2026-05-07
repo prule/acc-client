@@ -9,16 +9,18 @@ import java.time.LocalDateTime
 import org.slf4j.LoggerFactory
 
 @OptIn(KotlinCsvExperimental::class)
-class CsvWriterListener<T>(directory: Path?) : MessageListener<T> {
+class CsvWriterListener<T>(private val directory: Path?) : MessageListener<T> {
   private val logger = LoggerFactory.getLogger(javaClass)
   private lateinit var writer: CsvFileWriter
 
-  init {
+  override fun onStart() {
     if (directory != null) {
       val targetDir = directory.toFile()
       targetDir.mkdirs()
       val filename = "simulator-recording-${dateToFilename()}.csv"
-      writer = csvWriter().openAndGetRawWriter(File(targetDir, filename))
+      val targetFile = File(targetDir, filename)
+      logger.debug("writing to $targetFile")
+      writer = csvWriter().openAndGetRawWriter(targetFile)
       writer.writeRow("date", "type", "hex", "json")
       logger.debug("Writing $filename")
     } else {
@@ -33,13 +35,17 @@ class CsvWriterListener<T>(directory: Path?) : MessageListener<T> {
   private fun dateToFilename(): String = LocalDateTime.now().toString().replace(":", "-")
 
   override fun onMessage(bytes: ByteArray, message: T, messageSender: MessageSender) {
-    writer.writeRow(
-      listOf(
-        LocalDateTime.now(),
-        bytes[0].toInt(),
-        bytes.toHexString(),
-        JsonFormatter.toJsonString(message as Any),
+    try {
+      writer.writeRow(
+        listOf(
+          LocalDateTime.now(),
+          bytes[0].toInt(),
+          bytes.toHexString(),
+          JsonFormatter.toJsonString(message as Any),
+        )
       )
-    )
+    } catch (e: Exception) {
+      logger.error("Error while writing message", e)
+    }
   }
 }
