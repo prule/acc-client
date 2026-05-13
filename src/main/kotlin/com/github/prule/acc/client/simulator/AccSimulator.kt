@@ -56,7 +56,11 @@ class AccSimulator(val configuration: AccSimulatorConfiguration) {
           LoggingListener(),
           RegisterListener(
             socket,
-            EventPlayer(configuration.playbackEventsFile, configuration.delay),
+            EventPlayer(
+              configuration.playbackEventsFile,
+              configuration.delay,
+              configuration.maxEvents,
+            ),
           ),
         ),
       ) { buffer ->
