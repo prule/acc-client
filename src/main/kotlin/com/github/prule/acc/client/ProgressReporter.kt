@@ -6,9 +6,9 @@ class ProgressReporter(val total: Int, val reportAtPercent: Int = 10) {
   private val logger = LoggerFactory.getLogger(javaClass)
 
   fun report(progress: Int) {
-    val percentage = progress * 100 / total
-    if (percentage % reportAtPercent == 0) {
-      logger.info("Progress: $percentage%")
+    val percentage = progress.toDouble() * 100.0 / total.toDouble()
+    if (percentage % reportAtPercent.toDouble() == 0.0) {
+      logger.info("\r Progress: $percentage%")
     }
   }
 }

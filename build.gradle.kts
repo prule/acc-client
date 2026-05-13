@@ -45,6 +45,7 @@ tasks.register<JavaExec>("runAccSimulator") {
   group = "application"
   mainClass.set("com.github.prule.acc.client.simulator.AccSimulatorKt")
   classpath = sourceSets["main"].runtimeClasspath
+  systemProperty("logback.configurationFile", "logback-info.xml")
 }
 
 tasks.register<JavaExec>("runAccClient") {
