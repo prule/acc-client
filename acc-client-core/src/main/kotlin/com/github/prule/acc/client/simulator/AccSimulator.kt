@@ -5,6 +5,10 @@ import com.github.prule.acc.client.MessageReceiver
 import com.github.prule.acc.messages.AccBroadcastingOutbound
 import java.net.DatagramSocket
 import java.net.InetAddress
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import org.slf4j.LoggerFactory
 
 /**
@@ -45,37 +49,35 @@ fun main() {
  * session. Useful for development and debugging.
  *
  * `start()` is non-blocking: the receive loop runs on a background thread. Call `join()` on the
- * returned handle to wait for it to finish, or `stop()` to shut it down (closes the socket, which
- * unblocks the receive loop).
+ * returned handle to wait for it to finish, or `stop()` to shut it down. On stop the simulator
+ * sends a final `REALTIME_UPDATE` with phase=`SESSION_OVER` (so client-side `SessionDetector`s fire
+ * `onSessionStop` cleanly), cancels the playback coroutine, then closes the socket.
  */
 class AccSimulator(val configuration: AccSimulatorConfiguration) {
   private val logger = LoggerFactory.getLogger(javaClass)
 
   @Volatile private var socket: DatagramSocket? = null
   @Volatile private var thread: Thread? = null
+  @Volatile private var eventPlayer: EventPlayer? = null
+  @Volatile private var playbackScope: CoroutineScope? = null
 
   @Synchronized
   fun start(): Handle {
     check(thread == null) { "Simulator already running on port ${configuration.port}" }
     logger.debug("Starting simulator on port ${configuration.port}")
     val newSocket = DatagramSocket(configuration.port, InetAddress.getByName("0.0.0.0"))
+    val newScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    val newPlayer =
+      EventPlayer(configuration.playbackEventsFile, configuration.delay, configuration.maxEvents)
     socket = newSocket
+    playbackScope = newScope
+    eventPlayer = newPlayer
     val newThread =
       Thread(
           {
             MessageReceiver(
                 newSocket,
-                listOf(
-                  LoggingListener(),
-                  RegisterListener(
-                    newSocket,
-                    EventPlayer(
-                      configuration.playbackEventsFile,
-                      configuration.delay,
-                      configuration.maxEvents,
-                    ),
-                  ),
-                ),
+                listOf(LoggingListener(), RegisterListener(newSocket, newPlayer, newScope)),
               ) { buffer ->
                 AccBroadcastingOutbound(buffer)
               }
@@ -91,15 +93,22 @@ class AccSimulator(val configuration: AccSimulatorConfiguration) {
     return Handle(newThread)
   }
 
-  /** Stop if running; no-op otherwise. Blocks (up to 5s) until the receive loop exits. */
+  /**
+   * Stop if running; no-op otherwise. Emits a final SESSION_OVER frame, cancels the playback
+   * coroutine, then closes the socket. Blocks (up to 5s) until the receive loop exits.
+   */
   @Synchronized
   fun stop() {
     val s = socket ?: return
     logger.debug("Stopping simulator on port ${configuration.port}")
+    eventPlayer?.emitSessionOver()
+    playbackScope?.cancel()
     s.close()
     thread?.join(5_000)
     socket = null
     thread = null
+    eventPlayer = null
+    playbackScope = null
   }
 
   fun isRunning(): Boolean = thread?.isAlive == true
