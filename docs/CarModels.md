@@ -1,6 +1,6 @@
 # Car Models
 
-Reference for [`CarModelRepository`](../src/main/kotlin/com/github/prule/acc/client/CarModelRepository.kt) and the bundled `car_model_type.csv` lookup.
+Reference for [`CarModelRepository`](../acc-client-core/src/main/kotlin/com/github/prule/acc/client/CarModelRepository.kt) and the bundled `car_model_type.csv` lookup.
 
 ## What it is
 
@@ -28,7 +28,7 @@ The CSV is loaded lazily on first `findById` call and cached for the lifetime of
 
 ## CSV location
 
-Bundled as a resource: `src/main/resources/com/github/prule/acc/client/car_model_type.csv`.
+Bundled as a resource: `acc-client-core/src/main/resources/com/github/prule/acc/client/car_model_type.csv`.
 
 Format: standard CSV with header.
 
@@ -60,7 +60,7 @@ If you race a class or DLC car not in the bundled file, you can either:
 
 ### Option 1 — patch the bundled file in your fork
 
-Edit `src/main/resources/com/github/prule/acc/client/car_model_type.csv`, add the row, rebuild, publish locally:
+Edit `acc-client-core/src/main/resources/com/github/prule/acc/client/car_model_type.csv`, add the row, rebuild, publish locally:
 
 ```bash
 ./gradlew publishToMavenLocal
@@ -90,5 +90,5 @@ Two methods:
 
 ## Related
 
-- [`CarEntry.carModelType`](../src/main/kotlin/com/github/prule/acc/client/CarEntry.kt) — the int you'd pass to `findById`.
+- [`CarEntry.carModelType`](../acc-client-core/src/main/kotlin/com/github/prule/acc/client/CarEntry.kt) — the int you'd pass to `findById`.
 - [`ClientContext.cars`](ClientContext.md) — the map of `carId → CarEntry` populated by `ContextUpdater`. Each entry has the `carModelType` field.

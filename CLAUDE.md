@@ -5,7 +5,9 @@ Be concise.
 Folders in this project:
 
 - `docs`: information about architecture, design and specs.
-- `src`: a Kotlin library for listening to ACC messages over UDP
+- `acc-client-core`: the Kotlin library for listening to ACC messages over UDP, plus the simulator (published as `com.github.prule:acc-client`).
+- `simulator-grpc-server`: gRPC server that drives the simulator (proto + service + main).
+- `simulator-grpc-client`: gRPC client library + CLI for the simulator.
 
 When making changes ensure:
 

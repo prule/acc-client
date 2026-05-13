@@ -6,7 +6,7 @@ Reference for the slf4j + logback setup used by the library.
 
 - API: `org.slf4j:slf4j-api` (transitive).
 - Backend: `ch.qos.logback:logback-classic` (declared in `build.gradle.kts`).
-- Default config: [`src/main/resources/com/github/prule/acc/client/logback.xml`](../src/main/resources/com/github/prule/acc/client/logback.xml).
+- Default config: [`acc-client-core/src/main/resources/com/github/prule/acc/client/logback.xml`](../acc-client-core/src/main/resources/com/github/prule/acc/client/logback.xml).
 
 The shipped config sets the root level to `debug` and writes to STDOUT with the pattern:
 
@@ -22,7 +22,7 @@ Example line:
 
 ## Caveat for downstream consumers
 
-The bundled `logback.xml` lives at `src/main/resources/com/github/prule/acc/client/logback.xml` — that is **not** on the standard Logback discovery path (which is `logback.xml` at the root of the classpath). When this library is consumed as a JAR, downstream apps will not pick it up automatically.
+The bundled `logback.xml` lives at `acc-client-core/src/main/resources/com/github/prule/acc/client/logback.xml` — that is **not** on the standard Logback discovery path (which is `logback.xml` at the root of the classpath). When this library is consumed as a JAR, downstream apps will not pick it up automatically.
 
 Downstream apps should provide their own `logback.xml` at their classpath root.
 
@@ -134,4 +134,4 @@ The library doesn't currently use slf4j MDC or key-value pairs. The `%kvp` token
 ## See also
 
 - [Logback manual](https://logback.qos.ch/manual/configuration.html) — full configuration reference.
-- [`LoggingListener.kt`](../src/main/kotlin/com/github/prule/acc/client/LoggingListener.kt) — the source.
+- [`LoggingListener.kt`](../acc-client-core/src/main/kotlin/com/github/prule/acc/client/LoggingListener.kt) — the source.

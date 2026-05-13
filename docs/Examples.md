@@ -2,7 +2,7 @@
 
 Runnable example apps that exercise the library end-to-end. Useful as starter wiring and as smoke tests when verifying a fresh checkout works against your environment.
 
-Located under [`src/main/kotlin/com/github/prule/acc/client/example/`](../src/main/kotlin/com/github/prule/acc/client/example/).
+Located under [`src/main/kotlin/com/github/prule/acc/client/example/`](../acc-client-core/src/main/kotlin/com/github/prule/acc/client/example/).
 
 ## FocusedCarDashboard
 

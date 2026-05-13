@@ -6,9 +6,9 @@ Reference for the three listener interfaces, their lifecycle hooks, ordering rul
 
 | Interface | Granularity | When fired | Owner |
 |---|---|---|---|
-| [`MessageListener<T>`](../src/main/kotlin/com/github/prule/acc/client/MessageListener.kt) | Every inbound UDP message | Connection-scoped — `onStart` → `onMessage`* → `onStop` | `MessageReceiver` (one instance per `AccClient.connect` call) |
-| [`SessionEventListener`](../src/main/kotlin/com/github/prule/acc/client/SessionEventListener.kt) | Session boundaries + in-session messages | Session-scoped — `onSessionStart` → `onSessionMessage`* → `onSessionStop` | `SessionDetector` |
-| [`FilteredMessageListener<T>`](../src/main/kotlin/com/github/prule/acc/client/FilteredMessageListener.kt) | Subset of inbound messages by type + predicate | Wraps `MessageListener` — only forwards matching messages | User wiring |
+| [`MessageListener<T>`](../acc-client-core/src/main/kotlin/com/github/prule/acc/client/MessageListener.kt) | Every inbound UDP message | Connection-scoped — `onStart` → `onMessage`* → `onStop` | `MessageReceiver` (one instance per `AccClient.connect` call) |
+| [`SessionEventListener`](../acc-client-core/src/main/kotlin/com/github/prule/acc/client/SessionEventListener.kt) | Session boundaries + in-session messages | Session-scoped — `onSessionStart` → `onSessionMessage`* → `onSessionStop` | `SessionDetector` |
+| [`FilteredMessageListener<T>`](../acc-client-core/src/main/kotlin/com/github/prule/acc/client/FilteredMessageListener.kt) | Subset of inbound messages by type + predicate | Wraps `MessageListener` — only forwards matching messages | User wiring |
 
 `SessionEventListener`s are not registered directly with `AccClient.connect`; they are registered with a `SessionDetector` (which is itself a `MessageListener<AccBroadcastingInbound>`).
 
@@ -42,7 +42,7 @@ interface SessionEventListener {
 
 | Hook | Fires |
 |---|---|
-| `onSessionStart` | When `REALTIME_UPDATE.phase` enters `FORMATION_LAP` or `SESSION` AND preamble (track + at least one car) is cached. If the phase enters early without preamble, the start is **deferred** until the next preamble message arrives. The supplied [`SessionPreamble`](../src/main/kotlin/com/github/prule/acc/client/SessionPreamble.kt) is an immutable snapshot of `ClientContext` at that moment. |
+| `onSessionStart` | When `REALTIME_UPDATE.phase` enters `FORMATION_LAP` or `SESSION` AND preamble (track + at least one car) is cached. If the phase enters early without preamble, the start is **deferred** until the next preamble message arrives. The supplied [`SessionPreamble`](../acc-client-core/src/main/kotlin/com/github/prule/acc/client/SessionPreamble.kt) is an immutable snapshot of `ClientContext` at that moment. |
 | `onSessionMessage` | Per inbound message, **only while a session is active**. Fires for the `REALTIME_UPDATE` that triggered the session start. Does not fire for preamble messages received before the session started. |
 | `onSessionStop` | When `REALTIME_UPDATE.phase` enters `SESSION_OVER` or `POST_SESSION`, OR when the underlying receive loop stops mid-session (socket timeout, etc.). Idempotent — only fires if a session was active. |
 
