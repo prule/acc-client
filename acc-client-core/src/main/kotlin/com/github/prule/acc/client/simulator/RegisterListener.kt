@@ -4,9 +4,13 @@ import com.github.prule.acc.client.MessageListener
 import com.github.prule.acc.client.MessageSender
 import com.github.prule.acc.messages.AccBroadcastingOutbound
 import java.net.DatagramSocket
+import kotlinx.coroutines.CoroutineScope
 
-class RegisterListener(val socket: DatagramSocket, val eventPlayer: EventPlayer) :
-  MessageListener<AccBroadcastingOutbound> {
+class RegisterListener(
+  val socket: DatagramSocket,
+  val eventPlayer: EventPlayer,
+  val playbackScope: CoroutineScope,
+) : MessageListener<AccBroadcastingOutbound> {
   override fun onMessage(
     bytes: ByteArray,
     message: AccBroadcastingOutbound,
@@ -14,7 +18,7 @@ class RegisterListener(val socket: DatagramSocket, val eventPlayer: EventPlayer)
   ) {
     if (AccBroadcastingOutbound.OutboundMsgType.REGISTER_COMMAND_APPLICATION == message.msgType()) {
       sendRegistrationResult(messageSender)
-      eventPlayer.sendPackets(messageSender)
+      eventPlayer.sendPackets(playbackScope, messageSender)
     }
   }
 

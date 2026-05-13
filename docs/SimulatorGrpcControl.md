@@ -74,7 +74,16 @@ client module's `api` configuration if you'd rather drive the stub directly.
 ## Lifecycle notes
 
 - `AccSimulator.start()` is non-blocking - the receive loop runs on a background daemon thread.
-- `AccSimulator.stop()` closes the underlying `DatagramSocket`, which unblocks `receive()` and lets
-  the receive loop exit cleanly.
-- The server installs a JVM shutdown hook that stops any running simulator before shutting down the
-  gRPC server.
+- `AccSimulator.stop()` does three things in order:
+  1. **Emit a `REALTIME_UPDATE` with phase=`SESSION_OVER`** based on the most recent realtime
+     update sent during playback. This lets client-side `SessionDetector`s fire `onSessionStop`
+     for a clean session shutdown instead of relying purely on socket timeout. (No-op if the
+     client never registered and no realtime update was ever sent.)
+  2. Cancel the playback coroutine scope so the `EventPlayer` exits without error-spamming on a
+     closing socket.
+  3. Close the `DatagramSocket`, which unblocks `receive()` and lets the receive loop exit.
+- Clients also detect end-of-session via socket timeout if they have one configured
+  (`AccClient` uses `socket.soTimeout = 2000`), so the SESSION_OVER frame is an addition, not a
+  replacement, for normal connection-loss handling.
+- The gRPC server installs a JVM shutdown hook that stops any running simulator before shutting
+  down the gRPC server itself.
