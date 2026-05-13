@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+package com.github.prule.acc.client.simulator.grpc;
+
+option java_multiple_files = true;
+option java_package = "com.github.prule.acc.client.simulator.grpc";
+option java_outer_classname = "SimulatorProto";
+
+// Controls the ACC simulator. Starting a new session implicitly stops any
+// running session first, so callers don't need to send a Stop beforehand.
+service Simulator {
+  // Start a new playback session. Returns the effective config that's now running.
+  rpc Start(StartRequest) returns (StatusResponse);
+
+  // Stop the running session, if any. Idempotent.
+  rpc Stop(StopRequest) returns (StatusResponse);
+
+  // Query current state.
+  rpc Status(StatusRequest) returns (StatusResponse);
+}
+
+message StartRequest {
+  // Server-side filesystem path to the playback events CSV. Required.
+  string playback_events_file = 1;
+
+  // All fields below override the server's default configuration when set.
+  // Unset fields fall back to the server's startup defaults.
+  optional int32 port = 2;
+  optional string connection_password = 3;
+  // Milliseconds delay between emitted messages.
+  optional int64 delay_ms = 4;
+  // Maximum number of events to emit per session.
+  optional int32 max_events = 5;
+  // If true, only emit player events and skip other cars.
+  optional bool only_player_events = 6;
+}
+
+message StopRequest {}
+
+message StatusRequest {}
+
+message StatusResponse {
+  enum State {
+    STOPPED = 0;
+    RUNNING = 1;
+  }
+  State state = 1;
+  // Populated when state == RUNNING.
+  RunningConfig running = 2;
+}
+
+message RunningConfig {
+  string playback_events_file = 1;
+  int32 port = 2;
+  string connection_password = 3;
+  int64 delay_ms = 4;
+  int32 max_events = 5;
+  bool only_player_events = 6;
+}

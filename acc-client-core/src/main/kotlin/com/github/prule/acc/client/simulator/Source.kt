@@ -6,13 +6,13 @@ interface Source {
   fun inputStream(): InputStream
 }
 
-class ClasspathSource(private val path: String) : Source {
+class ClasspathSource(val path: String) : Source {
   override fun inputStream(): InputStream =
     javaClass.classLoader.getResourceAsStream(path)
       ?: throw Exception("Resource not found on classpath: $path")
 }
 
-class FileSource(private val path: String) : Source {
+class FileSource(val path: String) : Source {
   override fun inputStream(): InputStream {
     val file = java.io.File(path)
     if (!file.exists()) throw Exception("File not found: $path")
