@@ -53,7 +53,7 @@ class EventPlayer(
           }
         }
 
-        progressReporter.report(index)
+        progressReporter.report(index + 1)
         Thread.sleep(millisDelay)
       }
       logger.info("Event player finished {}", eventsFile)
