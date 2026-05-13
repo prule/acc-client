@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package simulator;
+
+option java_multiple_files = true;
+option java_package = "com.example.simulator.grpc";
+option java_outer_classname = "SimulatorProto";
+
+service SimulatorService {
+  rpc StartSession (StartSessionRequest) returns (SessionResponse);
+  rpc StopSession (StopSessionRequest) returns (SessionResponse);
+}
+
+message StartSessionRequest {
+  optional string filePath = 1; // Optional path to a session configuration file
+}
+
+message StopSessionRequest {
+  // No fields needed for a simple stop command
+}
+
+message SessionResponse {
+  bool success = 1;
+  string message = 2; // e.g., "Session started successfully", "No session to stop"
+  optional string sessionId = 3; // Optional ID for the started session
+}
