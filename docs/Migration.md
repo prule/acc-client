@@ -189,7 +189,7 @@ preamble.raw.trackData?.let { bytes ->
 preamble.raw.trackData to preamble.track
 ```
 
-`PreambleMessage` (raw bytes + parsed message pair) still exists in [`SessionPreamble.kt`](../src/main/kotlin/com/github/prule/acc/client/SessionPreamble.kt) for back-compat with consumers that want to use it directly, but it is no longer part of `SessionPreamble`.
+`PreambleMessage` (raw bytes + parsed message pair) still exists in [`SessionPreamble.kt`](../acc-client-core/src/main/kotlin/com/github/prule/acc/client/SessionPreamble.kt) for back-compat with consumers that want to use it directly, but it is no longer part of `SessionPreamble`.
 
 ### 6. `SessionListener` + `SessionState`
 

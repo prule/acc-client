@@ -8,6 +8,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ### Added
 
+- **gRPC control for the simulator** — new `simulator-grpc-server` and `simulator-grpc-client` Gradle modules. `Start` / `Stop` / `Status` RPCs let external apps drive the simulator's lifecycle (the existing library artifact name `com.github.prule:acc-client` is preserved). See [docs/SimulatorGrpcControl.md](docs/SimulatorGrpcControl.md).
+- `AccSimulator` is now restartable: `start()` returns a `Handle` (non-blocking, receive loop runs on a daemon thread) and `stop()` closes the socket to unblock the loop. `FileSource.path` / `ClasspathSource.path` are now public.
 - `ClientContext` — caller-owned cross-session state. Holds `connectionId`, `focusedCarIndex`, `track: TrackInfo?`, `cars: Map<Int, CarEntry>`, `entryListVersion`, `lastPreambleAt`, plus raw preamble bytes. Survives reconnects within a single `AccClient.connect` call. `isPreambleReady()` and `snapshotRawPreamble()` helpers.
 - `ContextUpdater` — single owner of all mutations to `ClientContext`. Decodes `TRACK_DATA`, `ENTRY_LIST`, `ENTRY_LIST_CAR`. On `REGISTRATION_RESULT`, requests entry list + track data so the cache stays current after every reconnect. Detects track-name change and clears stale cars. Evicts cars not present in new `ENTRY_LIST` messages.
 - `TrackInfo` — decoded snapshot of `TRACK_DATA` (name, id, meters, camera sets, HUD pages).

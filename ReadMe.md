@@ -42,6 +42,7 @@ Getting started:
 User guides:
 
 - [Recording.md](docs/Recording.md) — recording sessions to CSV, replaying with the simulator, CSV schema.
+- [SimulatorGrpcControl.md](docs/SimulatorGrpcControl.md) — start/stop/status the simulator over gRPC from an external app.
 - [Listeners.md](docs/Listeners.md) — listener interfaces, lifecycle hooks, ordering rules, error semantics.
 - [ClientContext.md](docs/ClientContext.md) — shared state object reference, plus `AccClientConfiguration` fields.
 - [Lifecycle.md](docs/Lifecycle.md) — register handshake, reconnect-on-timeout, what state survives.

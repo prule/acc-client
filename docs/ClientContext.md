@@ -4,9 +4,9 @@ Reference for the cross-session state object and the connect-time configuration.
 
 ## ClientContext
 
-[`ClientContext`](../src/main/kotlin/com/github/prule/acc/client/ClientContext.kt) is the shared state container holding everything cached across the lifetime of a single `AccClient.connect(...)` call — including across UDP reconnects.
+[`ClientContext`](../acc-client-core/src/main/kotlin/com/github/prule/acc/client/ClientContext.kt) is the shared state container holding everything cached across the lifetime of a single `AccClient.connect(...)` call — including across UDP reconnects.
 
-You construct it once and pass it to both [`ContextUpdater`](../src/main/kotlin/com/github/prule/acc/client/ContextUpdater.kt) (which writes) and [`SessionDetector`](../src/main/kotlin/com/github/prule/acc/client/SessionDetector.kt) (which reads). Custom listeners that need track or car info should read from it as well.
+You construct it once and pass it to both [`ContextUpdater`](../acc-client-core/src/main/kotlin/com/github/prule/acc/client/ContextUpdater.kt) (which writes) and [`SessionDetector`](../acc-client-core/src/main/kotlin/com/github/prule/acc/client/SessionDetector.kt) (which reads). Custom listeners that need track or car info should read from it as well.
 
 ```kotlin
 val context = ClientContext()
@@ -83,7 +83,7 @@ class FocusedCarTracker(private val context: ClientContext) : SessionEventListen
 
 ## TrackInfo
 
-[`TrackInfo`](../src/main/kotlin/com/github/prule/acc/client/TrackInfo.kt) is a stable decoded snapshot of `TRACK_DATA`.
+[`TrackInfo`](../acc-client-core/src/main/kotlin/com/github/prule/acc/client/TrackInfo.kt) is a stable decoded snapshot of `TRACK_DATA`.
 
 | Field | Type | Notes |
 |---|---|---|
@@ -97,12 +97,12 @@ class FocusedCarTracker(private val context: ClientContext) : SessionEventListen
 
 ## CarEntry
 
-[`CarEntry`](../src/main/kotlin/com/github/prule/acc/client/CarEntry.kt) is a stable decoded snapshot of `ENTRY_LIST_CAR`.
+[`CarEntry`](../acc-client-core/src/main/kotlin/com/github/prule/acc/client/CarEntry.kt) is a stable decoded snapshot of `ENTRY_LIST_CAR`.
 
 | Field | Type | Notes |
 |---|---|---|
 | `carId` | `Int` | Server-assigned. Used as map key in `ClientContext.cars`. |
-| `carModelType` | `Int` | Lookup via [`CarModelRepository.findById()`](../src/main/kotlin/com/github/prule/acc/client/CarModelRepository.kt) for human-readable name. |
+| `carModelType` | `Int` | Lookup via [`CarModelRepository.findById()`](../acc-client-core/src/main/kotlin/com/github/prule/acc/client/CarModelRepository.kt) for human-readable name. |
 | `teamName` | `String` | E.g. `"Black Falcon"`. |
 | `raceNumber` | `Int` | Car's race number. |
 | `cupCategory` | `String` | Enum name string, e.g. `"OVERALL_PRO"`, `"SILVER"`. |
@@ -112,7 +112,7 @@ class FocusedCarTracker(private val context: ClientContext) : SessionEventListen
 
 ## RawPreamble
 
-[`RawPreamble`](../src/main/kotlin/com/github/prule/acc/client/RawPreamble.kt) is an atomic snapshot of raw bytes from `ClientContext.snapshotRawPreamble()`.
+[`RawPreamble`](../acc-client-core/src/main/kotlin/com/github/prule/acc/client/RawPreamble.kt) is an atomic snapshot of raw bytes from `ClientContext.snapshotRawPreamble()`.
 
 | Field | Type | Notes |
 |---|---|---|
@@ -124,7 +124,7 @@ All byte arrays are independent copies — safe to retain.
 
 ## AccClientConfiguration
 
-[`AccClientConfiguration`](../src/main/kotlin/com/github/prule/acc/client/AccClientConfiguration.kt) — passed to `AccClient` constructor. All fields are `val` (immutable).
+[`AccClientConfiguration`](../acc-client-core/src/main/kotlin/com/github/prule/acc/client/AccClientConfiguration.kt) — passed to `AccClient` constructor. All fields are `val` (immutable).
 
 | Field | Type | Default | Meaning |
 |---|---|---|---|

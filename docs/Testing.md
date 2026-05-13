@@ -80,7 +80,7 @@ fun `fires onSessionStart with real preamble`() {
   val detector = SessionDetector(context, listOf(listener))
   val sender = mockk<MessageSender>(relaxed = true)
 
-  // Real bytes from src/main/resources/.../playback-events.csv
+  // Real bytes from acc-client-core/src/main/resources/.../playback-events.csv
   val (tdBytes, tdMsg) = parse("05120000000d005265642042756c6c2052696e67...")
   updater.onMessage(tdBytes, tdMsg, sender)
 
@@ -109,7 +109,7 @@ Cons:
 
 ## Where to find real bytes
 
-Bundled fixture: `src/main/resources/com/github/prule/acc/client/simulator/playback-events.csv`.
+Bundled fixture: `acc-client-core/src/main/resources/com/github/prule/acc/client/simulator/playback-events.csv`.
 
 One row per inbound type (1–7). Open in any editor — the `hex` column is the third field. Strip newlines/quotes before pasting into a test.
 
@@ -156,11 +156,11 @@ Drive them through a real `SessionDetector` with a real or stubbed `ClientContex
 
 Mostly state-transition tests — feed messages, assert `ClientContext` shape after.
 
-See `src/test/kotlin/.../ContextUpdaterTest.kt` for the canonical examples (registration, track change, entry list eviction, raw-bytes deep copy).
+See `acc-client-core/src/test/kotlin/.../ContextUpdaterTest.kt` for the canonical examples (registration, track change, entry list eviction, raw-bytes deep copy).
 
 ### SessionDetector
 
-Strategy B works best here — phase-transition logic depends on real `RealtimeUpdate.phase()` enum values. See `src/test/kotlin/.../SessionDetectorTest.kt`.
+Strategy B works best here — phase-transition logic depends on real `RealtimeUpdate.phase()` enum values. See `acc-client-core/src/test/kotlin/.../SessionDetectorTest.kt`.
 
 ### AccClient
 

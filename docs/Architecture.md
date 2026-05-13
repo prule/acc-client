@@ -2,7 +2,17 @@
 
 Reference for contributors. Module map, layering, data flow, dependency graph.
 
-## Module map
+## Gradle modules
+
+| Module | Publishes | Purpose |
+|---|---|---|
+| `acc-client-core` | `com.github.prule:acc-client` | Main library + simulator (the contents of the module map below). |
+| `simulator-grpc-server` | (not published) | gRPC server that wraps `AccSimulator` for external lifecycle control. Depends on `acc-client-core`. |
+| `simulator-grpc-client` | `com.github.prule:simulator-grpc-client` | Embeddable Kotlin client + CLI for the gRPC server. Standalone (does not pull in `acc-client-core`). |
+
+The artifact name `acc-client` is preserved across the multi-module split via `archivesName` so existing consumers keep resolving. See [SimulatorGrpcControl.md](SimulatorGrpcControl.md) for the gRPC surface.
+
+## Module map (acc-client-core)
 
 ```
 com.github.prule.acc.client/
@@ -136,7 +146,7 @@ simulator/* depends on:
   └── kotlin-csv
 ```
 
-External deps from `build.gradle.kts`:
+External deps from `acc-client-core/build.gradle.kts`:
 
 | Dep | Used for |
 |---|---|

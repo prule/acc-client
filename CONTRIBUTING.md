@@ -57,12 +57,15 @@ Produces `~/.m2/repository/com/github/prule/acc-client/main-SNAPSHOT/...`. Usefu
 ## Project layout
 
 ```
-src/main/kotlin/com/github/prule/acc/client/    Library code
-src/main/kotlin/com/github/prule/acc/client/simulator/   Simulator (test harness)
-src/main/resources/com/github/prule/acc/client/          Bundled CSV fixtures + logback.xml
-src/test/kotlin/...                              Tests
-docs/                                            Reference documentation
-recordings/                                      Local capture output (git-ignored)
+acc-client-core/         Main library + simulator (published as com.github.prule:acc-client)
+  src/main/kotlin/com/github/prule/acc/client/             Library code
+  src/main/kotlin/com/github/prule/acc/client/simulator/   Simulator (test harness)
+  src/main/resources/com/github/prule/acc/client/          Bundled CSV fixtures + logback.xml
+  src/test/kotlin/...                                      Tests
+simulator-grpc-server/   gRPC server that drives the simulator (proto + service + main)
+simulator-grpc-client/   gRPC client library + CLI for the simulator
+docs/                    Reference documentation
+recordings/              Local capture output (git-ignored)
 ```
 
 See `docs/Architecture.md` for module-by-module breakdown.
