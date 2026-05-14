@@ -13,9 +13,9 @@
 //
 // 2. FocusedCarDashboardViaGrpc (drives the simulator via gRPC):
 //      ./gradlew :examples:runSimulatorGrpcServer            # terminal 1 (idle until Start)
-//      ./gradlew :examples:runFocusedCarDashboardViaGrpc --args="--playback-file=<csv>"
-//                                                            # terminal 2
-//    The bundled fixture lives at
+//      ./gradlew :examples:runFocusedCarDashboardViaGrpc     # terminal 2
+//    The task ships with a default --playback-file pointing at a CSV under ./recordings/. Override
+//    with --args="--playback-file=<other.csv>". The bundled fixture lives at
 //    acc-client-core/src/main/resources/com/github/prule/acc/client/simulator/playback-events.csv
 //
 // See docs/Examples.md for the full walkthrough.
@@ -69,6 +69,11 @@ tasks.register<JavaExec>("runFocusedCarDashboardViaGrpc") {
   mainClass.set("com.github.prule.acc.client.examples.FocusedCarDashboardViaGrpcKt")
   classpath = sourceSets["main"].runtimeClasspath
   standardInput = System.`in`
+  // Default playback file — override on the command line with --args="--playback-file=<path>".
+  args =
+    listOf(
+      "--playback-file=recordings/simulator-recording-2026-05-06T11-48-49.206633-race-donington-ferrari.csv"
+    )
 }
 
 // Mirror of :simulator-grpc-server:runSimulatorGrpcServer so users can find every part of the
