@@ -85,5 +85,10 @@ client module's `api` configuration if you'd rather drive the stub directly.
 - Clients also detect end-of-session via socket timeout if they have one configured
   (`AccClient` uses `socket.soTimeout = 2000`), so the SESSION_OVER frame is an addition, not a
   replacement, for normal connection-loss handling.
+- **Only one playback session runs at a time** (mirroring real ACC). If a second client registers
+  while a session is still playing, `EventPlayer` emits a `SESSION_OVER` frame to the previous
+  client, cancels its playback job, then starts a fresh playback for the new client from the
+  beginning of the CSV. The previous client sees a clean session-end; the new client sees a fresh
+  session start.
 - The gRPC server installs a JVM shutdown hook that stops any running simulator before shutting
   down the gRPC server itself.
