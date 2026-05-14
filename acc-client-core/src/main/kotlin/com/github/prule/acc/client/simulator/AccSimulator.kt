@@ -68,7 +68,12 @@ class AccSimulator(val configuration: AccSimulatorConfiguration) {
     val newSocket = DatagramSocket(configuration.port, InetAddress.getByName("0.0.0.0"))
     val newScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     val newPlayer =
-      EventPlayer(configuration.playbackEventsFile, configuration.delay, configuration.maxEvents)
+      EventPlayer(
+        configuration.playbackEventsFile,
+        configuration.delay,
+        configuration.maxEvents,
+        configuration.onlyPlayerEvents,
+      )
     socket = newSocket
     playbackScope = newScope
     eventPlayer = newPlayer

@@ -10,6 +10,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 - **`FocusedCarDashboardViaGrpc` example** in the new `examples` module — same dashboard as `FocusedCarDashboard`, but drives simulator lifecycle over gRPC instead of needing a separate `runAccSimulator` invocation. See [docs/Examples.md](docs/Examples.md#focusedcardashboardviagrpc).
 
+### Fixed
+
+- **Simulator silenced the client during multi-car playback.** `EventPlayer` was hard-coded to drop every `REALTIME_CAR_UPDATE` except the focused car's, regardless of config, so a recording with many cars produced stretches of >2s without any packet reaching the client — long enough to trip `AccClient`'s `soTimeout` and force a reconnect loop (dashboards repeatedly logged "Disconnected"). `AccSimulatorConfiguration.onlyPlayerEvents` is now actually honoured: default is `false` (every car update is forwarded) and you opt in to the filter explicitly.
+
 ### Changed
 
 - **`FocusedCarDashboard` moved to the `:examples` module** (package `com.github.prule.acc.client.examples`). The dashboard's run task is now `:examples:runFocusedCarDashboard`, and `:examples:runSimulatorGrpcServer` is a new alias that delegates to the gRPC server module — so both halves of an example workflow live under one Gradle path prefix. The library module no longer carries an `example/` package.
