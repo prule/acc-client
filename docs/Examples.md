@@ -2,7 +2,7 @@
 
 Runnable example apps that exercise the library end-to-end. Useful as starter wiring and as smoke tests when verifying a fresh checkout works against your environment.
 
-Located under [`acc-client-core/src/main/kotlin/com/github/prule/acc/client/example/`](../acc-client-core/src/main/kotlin/com/github/prule/acc/client/example/) (library-only examples) and [`examples/src/main/kotlin/com/github/prule/acc/client/examples/`](../examples/src/main/kotlin/com/github/prule/acc/client/examples/) (examples that depend on multiple modules, e.g. gRPC).
+Located under [`examples/src/main/kotlin/com/github/prule/acc/client/examples/`](../examples/src/main/kotlin/com/github/prule/acc/client/examples/). The `examples` Gradle module bundles every run task in one place - see the comment block at the top of [`examples/build.gradle.kts`](../examples/build.gradle.kts) for the quick-start commands.
 
 ## FocusedCarDashboard
 
@@ -32,10 +32,10 @@ Standalone (against the bundled simulator):
 
 ```bash
 # terminal 1
-./gradlew runAccSimulator
+./gradlew :acc-client-core:runAccSimulator
 
 # terminal 2
-./gradlew runFocusedCarDashboard
+./gradlew :examples:runFocusedCarDashboard
 ```
 
 Against a real ACC server: edit `serverIp` in `FocusedCarDashboard.kt`'s `main()` and run the dashboard task on its own.
@@ -120,7 +120,7 @@ The repo ships a small recorded session at `acc-client-core/src/main/resources/c
 
 ```bash
 # terminal 1 - start the gRPC server (boots idle; no simulator running yet)
-./gradlew :simulator-grpc-server:runSimulatorGrpcServer
+./gradlew :examples:runSimulatorGrpcServer
 
 # terminal 2 - tell the server to start the simulator + run the dashboard
 ./gradlew :examples:runFocusedCarDashboardViaGrpc \

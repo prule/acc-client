@@ -29,11 +29,11 @@ Reports: `build/reports/tests/test/index.html`. CI runs the same target — see 
 ## Run locally
 
 ```bash
-./gradlew runAccSimulator   # bundled playback CSV → fake ACC server on port 9000
-./gradlew runAccClient      # connects to localhost:9000, prints messages
+./gradlew :acc-client-core:runAccSimulator   # bundled playback CSV → fake ACC server on :9000
+./gradlew :acc-client-core:runAccClient      # connects to localhost:9000, prints messages
 ```
 
-These are JavaExec tasks defined in `build.gradle.kts`. Edit the `main()` functions in `AccClient.kt` / `AccSimulator.kt` to point at a real ACC server or a different recording.
+Example apps (focused-car dashboard, gRPC-driven variant) live in `:examples` — see the header comment in [`examples/build.gradle.kts`](examples/build.gradle.kts) for one-liner workflows.
 
 ## Code style — ktfmt (Google)
 

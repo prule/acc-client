@@ -1,3 +1,26 @@
+// --- Examples module ----------------------------------------------------------------------------
+//
+// Runnable example apps that combine `acc-client-core` (the UDP library + simulator) with
+// `simulator-grpc-client` (lifecycle control over gRPC). The module is unpublished so neither
+// library picks the other up as a transitive dep - external consumers depending on
+// `com.github.prule:acc-client` or `com.github.prule:simulator-grpc-client` stay lean.
+//
+// Each example below has a Gradle task. Quick-start workflows:
+//
+// 1. FocusedCarDashboard (direct UDP, against a running ACC server or the bundled simulator):
+//      ./gradlew :acc-client-core:runAccSimulator            # terminal 1 (offline playback)
+//      ./gradlew :examples:runFocusedCarDashboard            # terminal 2
+//
+// 2. FocusedCarDashboardViaGrpc (drives the simulator via gRPC):
+//      ./gradlew :examples:runSimulatorGrpcServer            # terminal 1 (idle until Start)
+//      ./gradlew :examples:runFocusedCarDashboardViaGrpc --args="--playback-file=<csv>"
+//                                                            # terminal 2
+//    The bundled fixture lives at
+//    acc-client-core/src/main/resources/com/github/prule/acc/client/simulator/playback-events.csv
+//
+// See docs/Examples.md for the full walkthrough.
+// ------------------------------------------------------------------------------------------------
+
 plugins {
   kotlin("jvm")
   id("com.ncorti.ktfmt.gradle")
@@ -13,19 +36,48 @@ dependencies {
   implementation("ch.qos.logback:logback-classic:1.5.32")
 }
 
+// Isolated classpath for the `runSimulatorGrpcServer` alias below. Kept separate from `main` so the
+// server module's generated proto stubs don't collide with the client's on the example sources'
+// classpath.
+val grpcServerRuntime: Configuration by configurations.creating
+
+dependencies { grpcServerRuntime(project(":simulator-grpc-server")) }
+
 kotlin { jvmToolchain(21) }
 
 application {
+  // Default `run` target points at the gRPC-driven dashboard - the more end-to-end of the two.
   mainClass.set("com.github.prule.acc.client.examples.FocusedCarDashboardViaGrpcKt")
   applicationName = "focused-car-dashboard-via-grpc"
+}
+
+tasks.register<JavaExec>("runFocusedCarDashboard") {
+  group = "application"
+  description =
+    "Live single-line CLI dashboard. Requires a UDP source on :9000 (real ACC, or " +
+      ":acc-client-core:runAccSimulator in another terminal)."
+  mainClass.set("com.github.prule.acc.client.examples.FocusedCarDashboardKt")
+  classpath = sourceSets["main"].runtimeClasspath
+  standardInput = System.`in`
 }
 
 tasks.register<JavaExec>("runFocusedCarDashboardViaGrpc") {
   group = "application"
   description =
     "Drive the simulator via gRPC and render the focused-car dashboard. " +
-      "Requires a running simulator-grpc-server."
+      "Requires :examples:runSimulatorGrpcServer in another terminal."
   mainClass.set("com.github.prule.acc.client.examples.FocusedCarDashboardViaGrpcKt")
   classpath = sourceSets["main"].runtimeClasspath
   standardInput = System.`in`
+}
+
+// Mirror of :simulator-grpc-server:runSimulatorGrpcServer so users can find every part of the
+// example workflow under :examples:. Runs on an isolated classpath (see grpcServerRuntime above).
+tasks.register<JavaExec>("runSimulatorGrpcServer") {
+  group = "application"
+  description =
+    "Boot the simulator gRPC server. Pass flags via --args=\"...\", " +
+      "e.g. --args=\"--grpc-port=50051 --sim-port=9000\"."
+  mainClass.set("com.github.prule.acc.client.simulator.grpc.SimulatorGrpcServerKt")
+  classpath = grpcServerRuntime
 }

@@ -1,4 +1,4 @@
-package com.github.prule.acc.client.example
+package com.github.prule.acc.client.examples
 
 import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.Logger as LogbackLogger
@@ -27,8 +27,9 @@ import org.slf4j.LoggerFactory
  * - Looking up the human-readable car model name via [CarModelRepository].
  * - Pulling per-tick fields from [AccBroadcastingInbound.RealtimeCarUpdate].
  *
- * Run with `./gradlew runFocusedCarDashboard` against a running ACC server (or `./gradlew
- * runAccSimulator` in another terminal for offline playback).
+ * Run with `./gradlew :examples:runFocusedCarDashboard` against a running ACC server (or `./gradlew
+ * :examples:runSimulatorGrpcServer` + a `start` RPC for offline playback - see
+ * [FocusedCarDashboardViaGrpc] for the gRPC-driven variant).
  */
 class FocusedCarDashboard(
   private val context: ClientContext,
@@ -126,7 +127,7 @@ class FocusedCarDashboard(
  * Runnable entrypoint. Connects to a local ACC server (or the simulator) on port 9000.
  *
  * Edit [AccClientConfiguration] to point at a different host or port. Defaults match `./gradlew
- * runAccSimulator` so you can prove the wiring without a running game.
+ * :acc-client-core:runAccSimulator` so you can prove the wiring without a running game.
  *
  * Sets the root log level to WARN so DEBUG / INFO chatter doesn't clobber the in-place single-line
  * dashboard.

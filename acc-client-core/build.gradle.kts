@@ -55,13 +55,7 @@ tasks.register<JavaExec>("runAccClient") {
   classpath = sourceSets["main"].runtimeClasspath
 }
 
-tasks.register<JavaExec>("runFocusedCarDashboard") {
-  group = "application"
-  description = "Live CLI view of the focused car (track, model, gear, speed, lap %)."
-  mainClass.set("com.github.prule.acc.client.example.FocusedCarDashboardKt")
-  classpath = sourceSets["main"].runtimeClasspath
-  standardInput = System.`in`
-}
+// runFocusedCarDashboard now lives in `:examples` alongside the other example apps.
 
 publishing {
   publications { create<MavenPublication>("maven") { from(components["java"]) } }

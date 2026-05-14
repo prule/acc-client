@@ -9,6 +9,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 ### Added
 
 - **`FocusedCarDashboardViaGrpc` example** in the new `examples` module — same dashboard as `FocusedCarDashboard`, but drives simulator lifecycle over gRPC instead of needing a separate `runAccSimulator` invocation. See [docs/Examples.md](docs/Examples.md#focusedcardashboardviagrpc).
+
+### Changed
+
+- **`FocusedCarDashboard` moved to the `:examples` module** (package `com.github.prule.acc.client.examples`). The dashboard's run task is now `:examples:runFocusedCarDashboard`, and `:examples:runSimulatorGrpcServer` is a new alias that delegates to the gRPC server module — so both halves of an example workflow live under one Gradle path prefix. The library module no longer carries an `example/` package.
 - **gRPC control for the simulator** — new `simulator-grpc-server` and `simulator-grpc-client` Gradle modules. `Start` / `Stop` / `Status` RPCs let external apps drive the simulator's lifecycle (the existing library artifact name `com.github.prule:acc-client` is preserved). See [docs/SimulatorGrpcControl.md](docs/SimulatorGrpcControl.md).
 - `AccSimulator` is now restartable: `start()` returns a `Handle` (non-blocking, receive loop runs on a daemon thread) and `stop()` closes the socket to unblock the loop. `FileSource.path` / `ClasspathSource.path` are now public.
 - `ClientContext` — caller-owned cross-session state. Holds `connectionId`, `focusedCarIndex`, `track: TrackInfo?`, `cars: Map<Int, CarEntry>`, `entryListVersion`, `lastPreambleAt`, plus raw preamble bytes. Survives reconnects within a single `AccClient.connect` call. `isPreambleReady()` and `snapshotRawPreamble()` helpers.
