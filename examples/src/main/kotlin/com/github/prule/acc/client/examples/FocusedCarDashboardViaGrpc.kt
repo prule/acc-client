@@ -6,7 +6,6 @@ import com.github.prule.acc.client.AccClient
 import com.github.prule.acc.client.AccClientConfiguration
 import com.github.prule.acc.client.ClientContext
 import com.github.prule.acc.client.ContextUpdater
-import com.github.prule.acc.client.example.FocusedCarDashboard
 import com.github.prule.acc.client.simulator.grpc.client.SimulatorGrpcClient
 import kotlinx.coroutines.runBlocking
 import org.slf4j.Logger

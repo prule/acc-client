@@ -107,7 +107,7 @@ The simulator can be started programmatically using
 Run AccSimulator which pretends to be ACC and sends pre-recorded UDP packets to the client.
 
 ```shell
-./gradlew runAccSimulator
+./gradlew :acc-client-core:runAccSimulator
 ```
 
 ```text
@@ -120,7 +120,7 @@ Run AccSimulator which pretends to be ACC and sends pre-recorded UDP packets to 
 Run AccClient
 
 ```shell
-./gradlew runAccClient
+./gradlew :acc-client-core:runAccClient
 ```
 
 The client will register with the simulator and then start receiving packets as the simulator sends them:
