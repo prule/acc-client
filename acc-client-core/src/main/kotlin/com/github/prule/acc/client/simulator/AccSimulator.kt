@@ -36,7 +36,7 @@ fun main() {
           // FileSource("./recordings/simulator-recording-2026-05-04T18-49-26.591594-race.csv"),
           //          FileSource("./recordings/full-race-donington.csv"),
           FileSource(
-            "./recordings/simulator-recording-2026-05-06T11-48-49.206633-race-donington-ferrari.csv"
+            "../recordings/simulator-recording-2026-05-06T11-48-49.206633-race-donington-ferrari.csv"
           ),
       )
     )

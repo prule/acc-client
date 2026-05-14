@@ -5,6 +5,7 @@ import com.github.prule.acc.client.MessageSender
 import com.github.prule.acc.client.ProgressReporter
 import com.github.prule.acc.messages.AccBroadcastingInbound
 import io.kaitai.struct.ByteBufferKaitaiStream
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -72,7 +73,7 @@ class EventPlayer(
         }
 
         progressReporter.report(index + 1)
-        delay(millisDelay)
+        delay(millisDelay.milliseconds)
       }
       logger.info("Event player finished {}", eventsFile)
     }

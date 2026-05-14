@@ -133,7 +133,7 @@ class FocusedCarDashboard(
  * dashboard.
  */
 suspend fun main() {
-  setRootLogLevel(Level.WARN)
+  setRootLogLevel(Level.INFO)
 
   val context = ClientContext()
   AccClient(AccClientConfiguration(name = "Dashboard", port = 9000, serverIp = "127.0.0.1"))

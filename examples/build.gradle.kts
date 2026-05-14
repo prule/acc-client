@@ -86,3 +86,11 @@ tasks.register<JavaExec>("runSimulatorGrpcServer") {
   mainClass.set("com.github.prule.acc.client.simulator.grpc.SimulatorGrpcServerKt")
   classpath = grpcServerRuntime
 }
+
+tasks.register<JavaExec>("runAccSimulator") {
+  group = "application"
+  description = "Boot the simulator without gRPC"
+  mainClass.set("com.github.prule.acc.client.simulator.AccSimulatorKt")
+  classpath = sourceSets["main"].runtimeClasspath
+  systemProperty("logback.configurationFile", "logback-info.xml")
+}

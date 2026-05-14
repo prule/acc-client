@@ -10,5 +10,4 @@ data class AccClientConfiguration(
   val connectionPassword: String = "asd",
   val serverIp: String = "127.0.0.1",
   val connectTimeout: Duration = 10.seconds,
-  val retryPeriod: Duration = 10.seconds,
 )

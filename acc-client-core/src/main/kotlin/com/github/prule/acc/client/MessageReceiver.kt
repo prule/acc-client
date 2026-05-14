@@ -25,9 +25,11 @@ class MessageReceiver<T>(
           val receiveBuffer = ByteArray(2048)
           val receivePacket = DatagramPacket(receiveBuffer, receiveBuffer.size)
           socket.receive(receivePacket)
+          logger.debug("Received message ")
           val bytes = receiveBuffer.copyOfRange(0, receivePacket.length)
           val buffer = ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN)
           val message = messageFactory(ByteBufferKaitaiStream(buffer))
+          // a sender is provided in case a listener needs to reply to a particular message
           val sender = MessageSender(socket, receivePacket.socketAddress)
           listeners.forEach { listener -> listener.onMessage(bytes, message, sender) }
         } catch (e: java.net.SocketTimeoutException) {

@@ -61,7 +61,7 @@ class AccClient(private val configuration: AccClientConfiguration) {
 
   /** Attempts to connect to the server over UDP using the given connection */
   suspend fun connect(listeners: List<MessageListener<AccBroadcastingInbound>>) {
-    logger.debug("Connecting to server")
+    logger.info("Connecting to server with configuration {}", configuration)
     running = true
 
     val registerCommand =
@@ -76,7 +76,7 @@ class AccClient(private val configuration: AccClientConfiguration) {
       while (running) {
         logger.debug("Opening socket and registering")
         DatagramSocket().use { socket ->
-          socket.soTimeout = 2000
+          socket.soTimeout = configuration.connectTimeout.inWholeMilliseconds.toInt()
 
           val job = launch {
             MessageReceiver(socket, listeners) { buffer -> AccBroadcastingInbound(buffer) }.start()
