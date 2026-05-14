@@ -2,7 +2,7 @@
 
 Runnable example apps that exercise the library end-to-end. Useful as starter wiring and as smoke tests when verifying a fresh checkout works against your environment.
 
-Located under [`src/main/kotlin/com/github/prule/acc/client/example/`](../acc-client-core/src/main/kotlin/com/github/prule/acc/client/example/).
+Located under [`acc-client-core/src/main/kotlin/com/github/prule/acc/client/example/`](../acc-client-core/src/main/kotlin/com/github/prule/acc/client/example/) (library-only examples) and [`examples/src/main/kotlin/com/github/prule/acc/client/examples/`](../examples/src/main/kotlin/com/github/prule/acc/client/examples/) (examples that depend on multiple modules, e.g. gRPC).
 
 ## FocusedCarDashboard
 
@@ -92,6 +92,83 @@ No `LoggingListener` (would clutter the dashboard line), no `SessionDetector` (t
 - Add `SessionDetector(context, listOf(RecordingSessionListener(Path.of("./recordings"))))` to the listener list to record while watching.
 - Replace `@Volatile var gear` etc. with a `RealtimeCarUpdate?` reference if you want richer telemetry (delta, position, splits, world coords). See [WireProtocol.md](WireProtocol.md) for the full body shape.
 - Wrap the `FocusedCarDashboard` in a `FilteredMessageListener<RealtimeCarUpdate>` instead of doing type discrimination inside `onMessage`. See the recipe in [ListenerRecipes.md](ListenerRecipes.md).
+
+## FocusedCarDashboardViaGrpc
+
+Same dashboard, but the simulator's lifecycle is driven over gRPC instead of requiring a separate `runAccSimulator` task. Lives in the [`examples`](../examples/) module so it can depend on both `acc-client-core` and `simulator-grpc-client` without those modules picking each other up as transitive deps.
+
+### Architecture
+
+```
+  ┌────────────────────────────────┐                 ┌──────────────────────────┐
+  │ examples:                      │ ── gRPC ─────►  │ simulator-grpc-server    │
+  │  FocusedCarDashboardViaGrpc    │  Start/Stop/    │  (wraps AccSimulator)    │
+  │                                │   Status        │                          │
+  │  ┌──────────────────────────┐  │                 │  ┌────────────────────┐  │
+  │  │ SimulatorGrpcClient      │  │                 │  │ AccSimulator       │  │
+  │  └──────────────────────────┘  │                 │  │  (UDP on :9000)    │  │
+  │                                │                 │  └─────────┬──────────┘  │
+  │  ┌──────────────────────────┐  │ ◄── UDP ────────┼────────────┘             │
+  │  │ AccClient + dashboard    │  │                 │                          │
+  │  └──────────────────────────┘  │                 │                          │
+  └────────────────────────────────┘                 └──────────────────────────┘
+```
+
+### Run (using the bundled fixture)
+
+The repo ships a small recorded session at `acc-client-core/src/main/resources/com/github/prule/acc/client/simulator/playback-events.csv` that the gRPC server can read directly. From the repo root:
+
+```bash
+# terminal 1 - start the gRPC server (boots idle; no simulator running yet)
+./gradlew :simulator-grpc-server:runSimulatorGrpcServer
+
+# terminal 2 - tell the server to start the simulator + run the dashboard
+./gradlew :examples:runFocusedCarDashboardViaGrpc \
+  --args="--playback-file=acc-client-core/src/main/resources/com/github/prule/acc/client/simulator/playback-events.csv"
+```
+
+Expected output in terminal 2 (the dashboard line refreshes in place via `\r`):
+
+```
+Focused-car dashboard — Ctrl-C to stop
+[Red Bull Ring       ] focused=#13  Mercedes-AMG GT3 Evo            G:3   120kmh  L12  lap 11.9%
+```
+
+Press **Ctrl-C** to stop. The JVM shutdown hook sends a `Stop` RPC, which makes the simulator emit a final `REALTIME_UPDATE` with phase=`SESSION_OVER` so any `SessionDetector` on the client side fires `onSessionStop` cleanly before the socket closes.
+
+### Run (using your own recording)
+
+If you've recorded a session via [Recording.md](Recording.md), point `--playback-file` at the CSV. The path is **server-side** (read from the gRPC server's working directory), so put a full path or run the server from the directory that holds the file:
+
+```bash
+./gradlew :examples:runFocusedCarDashboardViaGrpc \
+  --args="--playback-file=/Users/me/recordings/silverstone-race.csv"
+```
+
+### CLI flags
+
+| Flag | Default | Purpose |
+|---|---|---|
+| `--playback-file=<path>` | (required) | Server-side CSV path |
+| `--grpc-host=<host>` | `localhost` | Where to reach the gRPC server |
+| `--grpc-port=<int>` | `50051` | gRPC server port |
+| `--sim-host=<host>` | `127.0.0.1` | Where `AccClient` connects (must match what the simulator binds to) |
+| `--sim-port=<int>` | `9000` | UDP port the simulator binds to |
+| `--password=<string>` | `asd` | ACC broadcasting connection password |
+| `--delay-ms=<long>` | (server default) | Override the per-message playback delay |
+
+`--sim-port` and `--password` are forwarded to the gRPC `Start` request, so they override the server's startup defaults too — both the simulator and `AccClient` end up using the same values.
+
+### Troubleshooting
+
+| Symptom | Likely cause |
+|---|---|
+| `UNAVAILABLE: io exception` from the gRPC client | The gRPC server isn't running, or `--grpc-port` doesn't match what the server is listening on. |
+| Server log says `file not found: ...` | The path passed in `--playback-file` doesn't exist from the **server's** working directory. Use an absolute path. |
+| Dashboard shows `[—] focused=#— ? G:N 0kmh  L0 lap  0.0%` and stays there | The simulator started but never emitted a `REALTIME_UPDATE` matching the focused car. Check the server logs - the CSV may only contain preamble rows, or `--delay-ms` is so high the client's 2s `soTimeout` fires first. |
+| "Address already in use" on simulator start | Another process is already on `--sim-port`. Pick a different port. |
+
+See [SimulatorGrpcControl.md](SimulatorGrpcControl.md) for the full gRPC surface (Start / Stop / Status with all knobs).
 
 ## See also
 

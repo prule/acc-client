@@ -64,6 +64,7 @@ acc-client-core/         Main library + simulator (published as com.github.prule
   src/test/kotlin/...                                      Tests
 simulator-grpc-server/   gRPC server that drives the simulator (proto + service + main)
 simulator-grpc-client/   gRPC client library + CLI for the simulator
+examples/                Cross-module example apps (e.g. dashboard driven via gRPC)
 docs/                    Reference documentation
 recordings/              Local capture output (git-ignored)
 ```
