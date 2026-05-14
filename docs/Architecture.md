@@ -9,6 +9,7 @@ Reference for contributors. Module map, layering, data flow, dependency graph.
 | `acc-client-core` | `com.github.prule:acc-client` | Main library + simulator (the contents of the module map below). |
 | `simulator-grpc-server` | (not published) | gRPC server that wraps `AccSimulator` for external lifecycle control. Depends on `acc-client-core`. |
 | `simulator-grpc-client` | `com.github.prule:simulator-grpc-client` | Embeddable Kotlin client + CLI for the gRPC server. Standalone (does not pull in `acc-client-core`). |
+| `examples` | (not published) | Cross-module example apps that combine `acc-client-core` and `simulator-grpc-client` (e.g. `FocusedCarDashboardViaGrpc`). Kept separate so neither published module picks up the other as a transitive dep. |
 
 The artifact name `acc-client` is preserved across the multi-module split via `archivesName` so existing consumers keep resolving. See [SimulatorGrpcControl.md](SimulatorGrpcControl.md) for the gRPC surface.
 

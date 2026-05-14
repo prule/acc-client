@@ -2,7 +2,7 @@
 
 Runnable example apps that exercise the library end-to-end. Useful as starter wiring and as smoke tests when verifying a fresh checkout works against your environment.
 
-Located under [`src/main/kotlin/com/github/prule/acc/client/example/`](../acc-client-core/src/main/kotlin/com/github/prule/acc/client/example/).
+Located under [`acc-client-core/src/main/kotlin/com/github/prule/acc/client/example/`](../acc-client-core/src/main/kotlin/com/github/prule/acc/client/example/) (library-only examples) and [`examples/src/main/kotlin/com/github/prule/acc/client/examples/`](../examples/src/main/kotlin/com/github/prule/acc/client/examples/) (examples that depend on multiple modules, e.g. gRPC).
 
 ## FocusedCarDashboard
 
@@ -92,6 +92,29 @@ No `LoggingListener` (would clutter the dashboard line), no `SessionDetector` (t
 - Add `SessionDetector(context, listOf(RecordingSessionListener(Path.of("./recordings"))))` to the listener list to record while watching.
 - Replace `@Volatile var gear` etc. with a `RealtimeCarUpdate?` reference if you want richer telemetry (delta, position, splits, world coords). See [WireProtocol.md](WireProtocol.md) for the full body shape.
 - Wrap the `FocusedCarDashboard` in a `FilteredMessageListener<RealtimeCarUpdate>` instead of doing type discrimination inside `onMessage`. See the recipe in [ListenerRecipes.md](ListenerRecipes.md).
+
+## FocusedCarDashboardViaGrpc
+
+Same dashboard, but starts the simulator over gRPC instead of requiring you to run `runAccSimulator` separately. Lives in the `examples` module.
+
+### Run
+
+```bash
+# terminal 1
+./gradlew :simulator-grpc-server:runSimulatorGrpcServer
+
+# terminal 2
+./gradlew :examples:runFocusedCarDashboardViaGrpc \
+  --args="--playback-file=./recordings/full-race-donington.csv"
+```
+
+The example:
+1. Connects to the running gRPC server (`localhost:50051` by default).
+2. Sends `Start` with the supplied playback file (path is **server-side**).
+3. Connects [`AccClient`](../acc-client-core/src/main/kotlin/com/github/prule/acc/client/AccClient.kt) over UDP and runs the same dashboard.
+4. Installs a JVM shutdown hook that sends `Stop` on Ctrl-C - the simulator emits a final `REALTIME_UPDATE` with phase=`SESSION_OVER` so client-side `SessionDetector`s fire `onSessionStop` cleanly.
+
+Flags: `--playback-file=<path>` (required), `--grpc-host`, `--grpc-port`, `--sim-host`, `--sim-port`, `--password`, `--delay-ms`. See [SimulatorGrpcControl.md](SimulatorGrpcControl.md) for the full RPC surface.
 
 ## See also
 
