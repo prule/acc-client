@@ -8,7 +8,13 @@ import io.mockk.verify
 import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeout
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -42,6 +48,62 @@ class EventPlayerTest {
     val body = parsed.body() as AccBroadcastingInbound.RealtimeUpdate
     assertThat(body.phase()).isEqualTo(AccBroadcastingInbound.SessionPhase.SESSION_OVER)
     assertThat(body.focusedCarIndex()).isEqualTo(7)
+  }
+
+  /**
+   * When a new client registers while a previous playback is still running, the player should: (1)
+   * emit a `SESSION_OVER` frame to the old client, (2) cancel the previous playback job, (3) start
+   * a fresh playback that delivers events to the new client (not the old one).
+   */
+  @Test
+  fun `new client triggers session restart for previous client`(): Unit = runBlocking {
+    val rt = realtimeUpdateBytes(phase = 5, focusedCarIndex = 7)
+    val rows = List(100) { rt } // long enough that playback is still active when we re-register
+    val player = EventPlayer(MultiRowSource(rows), millisDelay = 50)
+
+    val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    try {
+      val firstSender = mockk<MessageSender>(relaxed = true)
+      val firstJob = player.sendPackets(scope, firstSender)
+
+      // Wait until the first playback has emitted at least one realtime update so emitSessionOver
+      // has something to base its frame on.
+      withTimeout(2_000) {
+        while (true) {
+          val captured = mutableListOf<ByteArray>()
+          verify(atLeast = 0) { firstSender.send(capture(captured)) }
+          if (captured.isNotEmpty()) break
+          delay(10)
+        }
+      }
+
+      val secondSender = mockk<MessageSender>(relaxed = true)
+      player.sendPackets(scope, secondSender)
+
+      // The previous playback must be cancelled.
+      withTimeout(2_000) { while (firstJob.isActive) delay(10) }
+      assertThat(firstJob.isCancelled).isTrue()
+
+      // The previous client must receive a SESSION_OVER frame (last send before cancellation).
+      val firstCaptured = mutableListOf<ByteArray>()
+      verify { firstSender.send(capture(firstCaptured)) }
+      val sessionOver = firstCaptured.lastOrNull {
+        it[EventPlayer.PHASE_BYTE_OFFSET] == EventPlayer.SESSION_OVER_PHASE
+      }
+      assertThat(sessionOver).isNotNull()
+
+      // The new client must start receiving events.
+      withTimeout(2_000) {
+        while (true) {
+          val captured = mutableListOf<ByteArray>()
+          verify(atLeast = 0) { secondSender.send(capture(captured)) }
+          if (captured.isNotEmpty()) break
+          delay(10)
+        }
+      }
+    } finally {
+      scope.cancel()
+    }
   }
 
   @Test

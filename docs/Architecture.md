@@ -50,7 +50,7 @@ com.github.prule.acc.client/
 └── simulator/
     ├── AccSimulator                Pretends to be ACC; replays a CSV to a connected client
     ├── AccSimulatorConfiguration   Simulator settings
-    ├── EventPlayer                 CSV-driven sender — fixed-delay playback
+    ├── EventPlayer                 CSV-driven sender — fixed-delay playback. Enforces single-session: a new sendPackets() ends the previous client's session (SESSION_OVER + cancel) before starting a fresh one
     ├── PlaybackEventsRepository    Loads CSV → List<EventRow>
     ├── RegisterListener            Awaits client's register packet, then triggers EventPlayer
     └── Source / ClasspathSource / FileSource   Abstraction over CSV input

@@ -37,10 +37,24 @@ class EventPlayer(
 
   @Volatile private var sender: MessageSender? = null
   @Volatile private var lastRealtimeUpdate: ByteArray? = null
+  @Volatile private var currentJob: Job? = null
 
+  /**
+   * Start playback for the given client. Mirrors real ACC: only one session is active at a time, so
+   * if a previous playback is still running, this emits a final `SESSION_OVER` to the previous
+   * client and cancels its playback before launching the new one.
+   */
+  @Synchronized
   fun sendPackets(scope: CoroutineScope, messageSender: MessageSender): Job {
+    val previous = currentJob
+    if (previous != null && previous.isActive) {
+      logger.info("New client registered while a session was running; ending current session")
+      emitSessionOver()
+      previous.cancel()
+    }
     sender = messageSender
-    return scope.launch {
+    lastRealtimeUpdate = null
+    val job = scope.launch {
       val events = playbackEventsRepository.load(eventsFile)
       val progressReporter = ProgressReporter(events.size, 10)
       var focussedCar: Int? = null
@@ -55,20 +69,20 @@ class EventPlayer(
           val packet = AccBroadcastingInbound(stream)
           focussedCar = (packet.body() as AccBroadcastingInbound.RealtimeUpdate).focusedCarIndex()
           lastRealtimeUpdate = bytes
-          trySend(bytes)
+          trySend(bytes, messageSender)
         } else if (
           !onlyPlayerEvents ||
             focussedCar == null ||
             type != AccBroadcastingInbound.InboundMsgType.REALTIME_CAR_UPDATE.id()
         ) {
-          trySend(bytes)
+          trySend(bytes, messageSender)
         } else {
           val data: ByteArray = hexStringToByteArray(row.hex)
           val stream = ByteBufferKaitaiStream(data)
           val packet = AccBroadcastingInbound(stream)
           val carIndex = (packet.body() as AccBroadcastingInbound.RealtimeCarUpdate).carIndex()
           if (carIndex == focussedCar) {
-            trySend(bytes)
+            trySend(bytes, messageSender)
           }
         }
 
@@ -77,6 +91,8 @@ class EventPlayer(
       }
       logger.info("Event player finished {}", eventsFile)
     }
+    currentJob = job
+    return job
   }
 
   /**
@@ -99,9 +115,9 @@ class EventPlayer(
     }
   }
 
-  private fun trySend(bytes: ByteArray) {
+  private fun trySend(bytes: ByteArray, target: MessageSender) {
     try {
-      sender?.send(bytes)
+      target.send(bytes)
     } catch (e: Exception) {
       // Socket may have been closed by AccSimulator.stop(); playback is about to be cancelled.
       logger.debug("Playback send failed (socket likely closed): {}", e.message)
