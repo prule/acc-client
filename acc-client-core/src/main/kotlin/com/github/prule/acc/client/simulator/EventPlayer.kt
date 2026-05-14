@@ -23,6 +23,13 @@ class EventPlayer(
   val eventsFile: Source,
   val millisDelay: Long = 100,
   val maxEvents: Int = Int.MAX_VALUE,
+  /**
+   * If true, suppress `REALTIME_CAR_UPDATE` messages for cars other than the focused car. Useful
+   * when you want a quieter stream for single-car testing - but at the cost of long stretches of
+   * silence whenever the focused car's tick is sparse, which can trip `AccClient`'s 2s read
+   * timeout. Defaults to `false` so the simulator emits a steady stream of car updates.
+   */
+  val onlyPlayerEvents: Boolean = false,
 ) {
   private val playbackEventsRepository = PlaybackEventsRepository()
   private val logger = LoggerFactory.getLogger(javaClass)
@@ -49,7 +56,8 @@ class EventPlayer(
           lastRealtimeUpdate = bytes
           trySend(bytes)
         } else if (
-          focussedCar == null ||
+          !onlyPlayerEvents ||
+            focussedCar == null ||
             type != AccBroadcastingInbound.InboundMsgType.REALTIME_CAR_UPDATE.id()
         ) {
           trySend(bytes)

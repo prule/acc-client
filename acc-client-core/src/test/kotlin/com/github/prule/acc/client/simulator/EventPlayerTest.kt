@@ -24,7 +24,7 @@ class EventPlayerTest {
     val payload = realtimeUpdateBytes(phase = 5, focusedCarIndex = 7)
 
     val sender = mockk<MessageSender>(relaxed = true)
-    val player = EventPlayer(SingleRowSource(payload), millisDelay = 0)
+    val player = EventPlayer(MultiRowSource(listOf(payload)), millisDelay = 0)
     player.sendPackets(this, sender).join()
     player.emitSessionOver()
 
@@ -46,18 +46,60 @@ class EventPlayerTest {
 
   @Test
   fun `emitSessionOver is a no-op when no realtime update has been sent`() {
-    val player = EventPlayer(SingleRowSource(ByteArray(0)), millisDelay = 0)
+    val player = EventPlayer(MultiRowSource(emptyList()), millisDelay = 0)
     player.emitSessionOver() // sender never registered → silent no-op (no crash)
+  }
+
+  @Test
+  fun `by default all car updates are forwarded`(): Unit = runBlocking {
+    val rt = realtimeUpdateBytes(phase = 5, focusedCarIndex = 7)
+    val focusedCar = realtimeCarUpdateBytes(carIndex = 7)
+    val otherCar = realtimeCarUpdateBytes(carIndex = 99)
+    val sender = mockk<MessageSender>(relaxed = true)
+    val player = EventPlayer(MultiRowSource(listOf(rt, focusedCar, otherCar)), millisDelay = 0)
+
+    player.sendPackets(this, sender).join()
+
+    val captured = mutableListOf<ByteArray>()
+    verify { sender.send(capture(captured)) }
+    assertThat(captured).hasSize(3) // realtime_update + both car updates
+  }
+
+  @Test
+  fun `onlyPlayerEvents drops car updates for non-focused cars`(): Unit = runBlocking {
+    val rt = realtimeUpdateBytes(phase = 5, focusedCarIndex = 7)
+    val focusedCar = realtimeCarUpdateBytes(carIndex = 7)
+    val otherCar = realtimeCarUpdateBytes(carIndex = 99)
+    val sender = mockk<MessageSender>(relaxed = true)
+    val player =
+      EventPlayer(
+        MultiRowSource(listOf(rt, focusedCar, otherCar)),
+        millisDelay = 0,
+        onlyPlayerEvents = true,
+      )
+
+    player.sendPackets(this, sender).join()
+
+    val captured = mutableListOf<ByteArray>()
+    verify { sender.send(capture(captured)) }
+    assertThat(captured).hasSize(2) // realtime_update + focused-car update; non-focused dropped
+    assertThat(captured.map { it[0].toUByte().toInt() })
+      .containsExactly(
+        AccBroadcastingInbound.InboundMsgType.REALTIME_UPDATE.id().toInt(),
+        AccBroadcastingInbound.InboundMsgType.REALTIME_CAR_UPDATE.id().toInt(),
+      )
   }
 
   // --- helpers ---
 
-  private class SingleRowSource(private val bytes: ByteArray) : Source {
-    override fun inputStream() =
-      if (bytes.isEmpty()) "date,type,hex,json\n".byteInputStream()
-      else
-        "date,type,hex,json\n2026-01-01T00:00:00.000,${bytes[0].toUByte().toInt()},${toHex(bytes)},{}\n"
-          .byteInputStream()
+  private class MultiRowSource(private val rows: List<ByteArray>) : Source {
+    override fun inputStream(): java.io.InputStream {
+      val sb = StringBuilder("date,type,hex,json\n")
+      rows.forEach { bytes ->
+        sb.append("2026-01-01T00:00:00.000,${bytes[0].toUByte().toInt()},${toHex(bytes)},{}\n")
+      }
+      return sb.toString().byteInputStream()
+    }
 
     companion object {
       private fun toHex(bytes: ByteArray) = bytes.joinToString("") { "%02x".format(it) }
@@ -103,5 +145,42 @@ class EventPlayerTest {
     val bytes = s.toByteArray(Charsets.UTF_8)
     writeU2(bytes.size)
     write(bytes)
+  }
+
+  /** Build a valid REALTIME_CAR_UPDATE frame for [carIndex]. All numeric fields zeroed. */
+  private fun realtimeCarUpdateBytes(carIndex: Int): ByteArray {
+    val out = ByteArrayOutputStream()
+    out.write(AccBroadcastingInbound.InboundMsgType.REALTIME_CAR_UPDATE.id().toInt())
+    out.writeU2(carIndex) // car_index
+    out.writeU2(0) // driver_index
+    out.write(0) // driver_count
+    out.write(0) // gear (s1)
+    out.writeF4(0f) // world_pos_x
+    out.writeF4(0f) // world_pos_y
+    out.writeF4(0f) // yaw
+    out.write(0) // car_location
+    out.writeU2(0) // kmh
+    out.writeU2(0) // position
+    out.writeU2(0) // cup_position
+    out.writeU2(0) // track_position
+    out.writeF4(0f) // spline_position
+    out.writeU2(0) // laps
+    out.writeS4(0) // delta
+    writeLapInfo(out)
+    writeLapInfo(out)
+    writeLapInfo(out)
+    return out.toByteArray()
+  }
+
+  /** lap_time_ms(s4) + car_index(u2) + driver_index(u2) + num_splits(u1)=0 + 4 flag bytes */
+  private fun writeLapInfo(out: ByteArrayOutputStream) {
+    out.writeS4(0)
+    out.writeU2(0)
+    out.writeU2(0)
+    out.write(0) // num_splits = 0, so no splits array follows
+    out.write(0)
+    out.write(0)
+    out.write(0)
+    out.write(0)
   }
 }
