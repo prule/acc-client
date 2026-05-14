@@ -25,7 +25,6 @@ class MessageReceiver<T>(
           val receiveBuffer = ByteArray(2048)
           val receivePacket = DatagramPacket(receiveBuffer, receiveBuffer.size)
           socket.receive(receivePacket)
-          logger.debug("Received message ")
           val bytes = receiveBuffer.copyOfRange(0, receivePacket.length)
           val buffer = ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN)
           val message = messageFactory(ByteBufferKaitaiStream(buffer))

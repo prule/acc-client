@@ -86,6 +86,7 @@ class EventPlayer(
           }
         }
 
+        logger.trace("Sending")
         progressReporter.report(index + 1)
         delay(millisDelay.milliseconds)
       }

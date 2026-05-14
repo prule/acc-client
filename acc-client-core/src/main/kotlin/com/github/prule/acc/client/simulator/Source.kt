@@ -18,4 +18,8 @@ class FileSource(val path: String) : Source {
     if (!file.exists()) throw Exception("File not found: $path")
     return file.inputStream()
   }
+
+  override fun toString(): String {
+    return "FileSource(path='$path')"
+  }
 }

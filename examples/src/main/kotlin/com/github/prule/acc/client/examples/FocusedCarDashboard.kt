@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory
  *
  * Run with `./gradlew :examples:runFocusedCarDashboard` against a running ACC server (or `./gradlew
  * :examples:runSimulatorGrpcServer` + a `start` RPC for offline playback - see
- * [FocusedCarDashboardViaGrpc] for the gRPC-driven variant).
+ * [com.github.prule.acc.client.examples.FocusedCarDashboardViaGrpc] for the gRPC-driven variant).
  */
 class FocusedCarDashboard(
   private val context: ClientContext,
