@@ -9,6 +9,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/acc-client-core" />
+            <option value="$PROJECT_DIR$/examples" />
             <option value="$PROJECT_DIR$/simulator-grpc-client" />
             <option value="$PROJECT_DIR$/simulator-grpc-server" />
           </set>

@@ -72,7 +72,7 @@ tasks.register<JavaExec>("runFocusedCarDashboardViaGrpc") {
   // Default playback file — override on the command line with --args="--playback-file=<path>".
   args =
     listOf(
-      "--playback-file=recordings/simulator-recording-2026-05-06T11-48-49.206633-race-donington-ferrari.csv"
+      "--playback-file=../recordings/simulator-recording-2026-05-06T11-48-49.206633-race-donington-ferrari.csv"
     )
 }
 
