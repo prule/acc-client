@@ -18,7 +18,7 @@ ktfmt { googleStyle() }
 
 val grpcVersion = "1.68.1"
 val grpcKotlinVersion = "1.4.1"
-val protobufVersion = "3.25.5"
+val protobufVersion = "3.25.9"
 
 dependencies {
   implementation(project(":acc-client-core"))
