@@ -16,7 +16,7 @@ testing {
 
 ktfmt { googleStyle() }
 
-val grpcVersion = "1.68.1"
+val grpcVersion = "1.83.1"
 val grpcKotlinVersion = "1.4.1"
 val protobufVersion = "3.25.5"
 
