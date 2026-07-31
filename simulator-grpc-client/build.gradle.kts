@@ -11,7 +11,7 @@ plugins {
 ktfmt { googleStyle() }
 
 val grpcVersion = "1.68.1"
-val grpcKotlinVersion = "1.4.1"
+val grpcKotlinVersion = "1.5.0"
 val protobufVersion = "4.35.1"
 
 // Share the .proto definitions with the server module rather than duplicating.
