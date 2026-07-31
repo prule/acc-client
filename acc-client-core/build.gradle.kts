@@ -30,11 +30,11 @@ dependencies {
   implementation("io.github.blackmo18:kotlin-grass-parser-jvm:0.8.0")
   implementation("io.github.blackmo18:kotlin-grass-date-time-jvm:0.8.0")
   implementation("com.fasterxml.jackson.core:jackson-databind:2.22.1")
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0")
   testImplementation(kotlin("test"))
   testImplementation("org.assertj:assertj-core:3.27.7")
   testImplementation("org.mockito.kotlin:mockito-kotlin:6.3.0")
-  testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
+  testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.11.0")
   testImplementation("io.mockk:mockk:1.14.11")
 }
 

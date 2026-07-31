@@ -28,7 +28,7 @@ dependencies {
   implementation("io.grpc:grpc-netty-shaded:$grpcVersion")
   implementation("io.grpc:grpc-kotlin-stub:$grpcKotlinVersion")
   implementation("com.google.protobuf:protobuf-kotlin:$protobufVersion")
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0")
   implementation("ch.qos.logback:logback-classic:1.6.1")
 
   testImplementation("org.assertj:assertj-core:3.27.7")
