@@ -24,7 +24,7 @@ dependencies {
   api("com.google.protobuf:protobuf-kotlin:$protobufVersion")
   implementation("io.grpc:grpc-netty-shaded:$grpcVersion")
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
-  implementation("ch.qos.logback:logback-classic:1.5.32")
+  implementation("ch.qos.logback:logback-classic:1.6.1")
 
   testImplementation(kotlin("test"))
   testImplementation("org.assertj:assertj-core:3.27.7")
