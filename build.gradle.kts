@@ -3,7 +3,7 @@ plugins {
   kotlin("plugin.serialization") version "2.3.21" apply false
   id("org.jetbrains.dokka") version "2.2.0" apply false
   id("com.ncorti.ktfmt.gradle") version "0.26.0" apply false
-  id("com.google.protobuf") version "0.9.5" apply false
+  id("com.google.protobuf") version "0.10.0" apply false
 }
 
 allprojects {
