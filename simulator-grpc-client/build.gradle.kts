@@ -12,7 +12,7 @@ ktfmt { googleStyle() }
 
 val grpcVersion = "1.68.1"
 val grpcKotlinVersion = "1.4.1"
-val protobufVersion = "4.35.1"
+val protobufVersion = "4.36.2"
 
 // Share the .proto definitions with the server module rather than duplicating.
 sourceSets { main { proto { srcDir("../simulator-grpc-server/src/main/proto") } } }
